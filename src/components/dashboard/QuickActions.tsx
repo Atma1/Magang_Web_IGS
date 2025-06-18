@@ -33,13 +33,13 @@ const QuickActions: React.FC = () => {
 
   return (
     <div>
-      <motion.div 
+      <motion.div
         className="flex items-center justify-center mb-12"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
       >
         <FaMagic className="text-purple-500 text-3xl mr-4" />
-        <h2 className="text-4xl font-bold text-white text-shadow">Quick Actions</h2>
+        <h2 className="text-4xl font-bold text-black text-shadow">Quick Actions</h2>
         <FaMagic className="text-purple-500 text-3xl ml-4" />
       </motion.div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -51,13 +51,13 @@ const QuickActions: React.FC = () => {
             transition={{ duration: 0.3, delay: index * 0.1 }}
           >
             <Link href={action.link} className="block h-full">
-              <motion.div 
+              <motion.div
                 className={`${action.gradient} ${action.hoverGradient} rounded-2xl p-8 h-full shadow-xl hover:shadow-2xl transition-all duration-300 group`}
                 whileHover={{ scale: 1.05, y: -5 }}
                 whileTap={{ scale: 0.95 }}
               >
                 <div className="text-white text-center">
-                  <motion.div 
+                  <motion.div
                     className="mb-6"
                     whileHover={{ rotate: 360 }}
                     transition={{ duration: 0.6 }}
