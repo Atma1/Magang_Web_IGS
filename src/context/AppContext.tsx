@@ -19,10 +19,10 @@ interface Notification {
 
 const defaultContext: AppContextProps = {
   darkMode: false,
-  toggleDarkMode: () => {},
+  toggleDarkMode: () => { },
   notifications: [],
-  addNotification: () => {},
-  clearNotifications: () => {}
+  addNotification: () => { },
+  clearNotifications: () => { }
 };
 
 const AppContext = createContext<AppContextProps>(defaultContext);

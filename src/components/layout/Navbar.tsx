@@ -2,30 +2,32 @@ import { FC, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  FaBars, 
-  FaTimes, 
-  FaBell, 
-  FaChartLine, 
-  FaMapMarkedAlt, 
-  FaClipboardList, 
+import {
+  FaBars,
+  FaTimes,
+  FaBell,
+  FaChartLine,
+  FaMapMarkedAlt,
+  FaClipboardList,
   FaGraduationCap,
   FaShieldAlt,
-  FaHome
+  FaHome,
+  FaUserShield
 } from 'react-icons/fa';
 
 const Navbar: FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const router = useRouter();
-  
+
   const navLinks = [
     { title: 'Dashboard', path: '/', icon: FaHome, color: 'text-blue-600' },
     { title: 'Map', path: '/map', icon: FaMapMarkedAlt, color: 'text-green-600' },
     { title: 'Reports', path: '/reports', icon: FaClipboardList, color: 'text-orange-600' },
     { title: 'Education', path: '/education', icon: FaGraduationCap, color: 'text-purple-600' },
+    { title: 'Admin', path: '/admin', icon: FaUserShield, color: 'text-red-600' },
   ];
-  
+
   const isActive = (path: string) => router.pathname === path;
 
   useEffect(() => {
@@ -37,12 +39,11 @@ const Navbar: FC = () => {
   }, []);
 
   return (
-    <motion.nav 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${
-        scrolled 
-          ? 'glass-intense backdrop-blur-md shadow-xl' 
+    <motion.nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${scrolled
+          ? 'glass-intense backdrop-blur-md shadow-xl'
           : 'bg-transparent'
-      }`}
+        }`}
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.1 }}
@@ -50,7 +51,7 @@ const Navbar: FC = () => {
       <div className="container mx-auto px-6">
         <div className="flex justify-between h-20 items-center">
           {/* Logo dengan Efek Rainbow */}
-          <motion.div 
+          <motion.div
             className="flex items-center"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -67,7 +68,7 @@ const Navbar: FC = () => {
                 </div>
               </motion.div>
               <div>
-                <motion.h1 
+                <motion.h1
                   className="text-3xl font-bold text-gradient-rainbow"
                   whileHover={{ scale: 1.05 }}
                 >
@@ -77,7 +78,7 @@ const Navbar: FC = () => {
               </div>
             </Link>
           </motion.div>
-          
+
           {/* Desktop Navigation dengan Warna-warni */}
           <div className="hidden lg:flex items-center space-x-3">
             {navLinks.map((link, index) => (
@@ -89,11 +90,10 @@ const Navbar: FC = () => {
               >
                 <Link href={link.path}>
                   <motion.div
-                    className={`relative px-6 py-3 rounded-2xl transition-all duration-300 group ${
-                      isActive(link.path)
+                    className={`relative px-6 py-3 rounded-2xl transition-all duration-300 group ${isActive(link.path)
                         ? 'glass-card text-gray-700 shadow-lg'
                         : 'text-gray-600 hover:text-gray-800 hover:glass-card'
-                    }`}
+                      }`}
                     whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.95 }}
                   >
@@ -117,11 +117,11 @@ const Navbar: FC = () => {
               </motion.div>
             ))}
           </div>
-          
+
           {/* Right Side Actions */}
           <div className="flex items-center space-x-4">
             {/* Notification Button dengan Efek Neon */}
-            <motion.button 
+            <motion.button
               className="relative p-4 rounded-2xl glass-card hover:neon-blue transition-all duration-300"
               whileHover={{ scale: 1.1, rotate: 10 }}
               whileTap={{ scale: 0.9 }}
@@ -135,7 +135,7 @@ const Navbar: FC = () => {
                 <span className="text-white text-xs font-bold">3</span>
               </motion.div>
             </motion.button>
-            
+
             {/* Mobile Menu Button */}
             <motion.button
               className="lg:hidden p-4 rounded-2xl glass-card"
@@ -170,7 +170,7 @@ const Navbar: FC = () => {
           </div>
         </div>
       </div>
-      
+
       {/* Mobile Menu dengan Animasi Smooth */}
       <AnimatePresence>
         {isOpen && (
@@ -191,21 +191,18 @@ const Navbar: FC = () => {
                     transition={{ delay: index * 0.1 }}
                   >
                     <Link href={link.path} onClick={() => setIsOpen(false)}>
-                      <motion.div 
-                        className={`flex items-center space-x-4 px-8 py-4 transition-all duration-300 ${
-                          isActive(link.path)
-                            ? 'bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 border-r-4 border-gradient-to-b from-blue-400 to-purple-500'
+                      <motion.div
+                        className={`flex items-center space-x-4 px-8 py-4 transition-all duration-300 ${isActive(link.path)
+                            ? 'bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 border-r-4 border-blue-400'
                             : 'hover:bg-gradient-to-r hover:from-blue-25 hover:to-purple-25'
-                        }`}
+                          }`}
                         whileHover={{ scale: 1.02, x: 10 }}
                         whileTap={{ scale: 0.98 }}
                       >
-                        <link.icon className={`w-6 h-6 ${
-                          isActive(link.path) ? link.color : 'text-gray-500'
-                        }`} />
-                        <span className={`font-medium text-lg ${
-                          isActive(link.path) ? 'text-gray-800' : 'text-gray-600'
-                        }`}>
+                        <link.icon className={`w-6 h-6 ${isActive(link.path) ? link.color : 'text-gray-500'
+                          }`} />
+                        <span className={`font-medium text-lg ${isActive(link.path) ? 'text-gray-800' : 'text-gray-600'
+                          }`}>
                           {link.title}
                         </span>
                       </motion.div>
