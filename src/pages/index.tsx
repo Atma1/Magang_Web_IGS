@@ -9,7 +9,6 @@ import { useSensors } from '../hooks/useSensors';
 import StatusSummary from '../components/dashboard/StatusSummary';
 import Loading from '../components/common/Loading';
 import {
-  FaRocket,
   FaShieldAlt,
   FaChartLine,
   FaGlobe,
