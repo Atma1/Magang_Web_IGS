@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
-import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
+import React, { useRef, useState } from 'react';
+import Map, { FullscreenControl, GeolocateControl, MapRef, Marker, NavigationControl, Popup } from 'react-map-gl/mapbox'
 import { Sensor } from '../../types';
+import { IoCloseCircle } from 'react-icons/io5';
+import "mapbox-gl/dist/mapbox-gl.css";
 
 interface MapDisplayProps {
   sensors: Sensor[];
@@ -8,27 +10,22 @@ interface MapDisplayProps {
 
 const MapDisplay: React.FC<MapDisplayProps> = ({ sensors }) => {
   const [selectedSensor, setSelectedSensor] = useState<Sensor | null>(null);
-  
-  const { isLoaded } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '',
+  const [viewState, setViewState] = useState({
+    longitude: 107.6194,
+    latitude: -6.9122,
+    zoom: 12
   });
 
-  const mapCenter = {
-    lat: -6.9122,
-    lng: 107.6194,
-  };
-
-  const getMarkerIcon = (status: string) => {
+  const getMarkerColor = (status: string) => {
     switch (status.toLowerCase()) {
       case 'normal':
-        return '/markers/marker-green.png';
+        return '#22c55e'; // green
       case 'siaga':
-        return '/markers/marker-yellow.png';
+        return '#eab308'; // yellow
       case 'bahaya':
-        return '/markers/marker-red.png';
+        return '#ef4444'; // red
       default:
-        return '/markers/marker-blue.png';
+        return '#3b82f6'; // blue
     }
   };
 
@@ -36,46 +33,63 @@ const MapDisplay: React.FC<MapDisplayProps> = ({ sensors }) => {
     setSelectedSensor(sensor);
   };
 
-  const mapContainerStyle = {
-    width: '100%',
-    height: '100%',
-  };
-
-  if (!isLoaded) return <div className="flex items-center justify-center h-full">Loading map...</div>;
+  const mapRef = useRef<MapRef>(null);
 
   return (
-    <GoogleMap
-      mapContainerStyle={mapContainerStyle}
-      center={mapCenter}
-      zoom={13}
-      options={{
-        mapTypeControl: true,
-        streetViewControl: true,
-        fullscreenControl: true,
-      }}
+    <Map
+      ref={mapRef}
+      {...viewState}
+      onMove={evt => setViewState(evt.viewState)}
+      style={{ width: '100%', height: '100%' }}
+      mapStyle="mapbox://styles/mapbox/streets-v12"
+      mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_KEY}
     >
+      <FullscreenControl />
+      <GeolocateControl />
+      <NavigationControl />
       {sensors.map((sensor) => (
         <Marker
           key={sensor.id}
-          position={{ lat: sensor.latitude, lng: sensor.longitude }}
-          icon={{
-            url: getMarkerIcon(sensor.status),
-            scaledSize: new window.google.maps.Size(30, 40),
-          }}
+          longitude={sensor.longitude}
+          latitude={sensor.latitude}
+          anchor="bottom"
           onClick={() => handleMarkerClick(sensor)}
-          animation={window.google.maps.Animation.DROP}
-        />
+        >
+          <div
+            style={{
+              width: 20,
+              height: 20,
+              borderRadius: '50%',
+              backgroundColor: getMarkerColor(sensor.status),
+              border: '2px solid white',
+              cursor: 'pointer',
+              boxShadow: '0 2px 4px rgba(0,0,0,0.3)'
+            }}
+          />
+        </Marker>
       ))}
 
       {selectedSensor && (
-        <InfoWindow
-          position={{ lat: selectedSensor.latitude, lng: selectedSensor.longitude }}
-          onCloseClick={() => setSelectedSensor(null)}
+        <Popup
+          longitude={selectedSensor.longitude}
+          latitude={selectedSensor.latitude}
+          anchor="top"
+          onClose={() => setSelectedSensor(null)}
+          closeButton={false}
+          closeOnClick={false}
         >
           <div className="p-2 max-w-xs">
-            <h3 className="font-bold text-gray-800">{selectedSensor.name}</h3>
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="font-bold text-gray-800">{selectedSensor.name}</h3>
+              <button
+                onClick={() => setSelectedSensor(null)}
+                className="text-gray-500 hover:text-gray-700 text-lg font-bold"
+              >
+                <IoCloseCircle />
+              </button>
+            </div>
             <div className="my-2 text-sm text-gray-600">{selectedSensor.location}</div>
-            
+
             <div className="grid grid-cols-3 gap-2 my-2 text-xs">
               <div className="text-center p-1 bg-gray-100 rounded">
                 <div className="font-semibold">{selectedSensor.temperature}°C</div>
@@ -90,22 +104,21 @@ const MapDisplay: React.FC<MapDisplayProps> = ({ sensors }) => {
                 <div>Movement</div>
               </div>
             </div>
-            
+
             <div className={`text-center p-1 mt-2 rounded font-medium text-sm
-              ${
-                selectedSensor.status === 'Normal'
-                  ? 'bg-success-100 text-success-700'
-                  : selectedSensor.status === 'Siaga'
-                  ? 'bg-warning-100 text-warning-700'
-                  : 'bg-danger-100 text-danger-700'
+              ${selectedSensor.status === 'Normal'
+                ? 'bg-success-100 text-green-700'
+                : selectedSensor.status === 'Siaga'
+                  ? 'bg-warning-100 text-yellow-700'
+                  : 'bg-danger-100 text-red-700'
               }
             `}>
               Status: {selectedSensor.status}
             </div>
           </div>
-        </InfoWindow>
+        </Popup>
       )}
-    </GoogleMap>
+    </Map>
   );
 };
 
