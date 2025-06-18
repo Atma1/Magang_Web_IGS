@@ -15,14 +15,14 @@ const ReportsPage: NextPage = () => {
   };
 
   return (
-    <>
+    <div className='pt-28'>
       <Head>
         <title>Citizen Reports | LEWS</title>
         <meta name="description" content="Report landslide incidents or concerns, and view existing reports." />
       </Head>
-      
+
       <div className="container py-8">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -31,7 +31,7 @@ const ReportsPage: NextPage = () => {
           <h1 className="text-3xl font-bold tracking-tight">Citizen Reports</h1>
           <p className="text-muted-foreground mt-2">Report landslide incidents or concerns, and view existing reports.</p>
         </motion.div>
-        
+
         <Tabs defaultValue="submit" className="w-full">
           <TabsList className="grid w-full grid-cols-2 md:w-[400px]">
             <TabsTrigger value="submit">Submit Report</TabsTrigger>
@@ -59,7 +59,7 @@ const ReportsPage: NextPage = () => {
           </TabsContent>
         </Tabs>
       </div>
-    </>
+    </div>
   );
 };
 

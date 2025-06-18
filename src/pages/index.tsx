@@ -8,11 +8,11 @@ import QuickActions from '../components/dashboard/QuickActions';
 import { useSensors } from '../hooks/useSensors';
 import StatusSummary from '../components/dashboard/StatusSummary';
 import Loading from '../components/common/Loading';
-import { 
-  FaRocket, 
-  FaShieldAlt, 
-  FaChartLine, 
-  FaGlobe, 
+import {
+  FaRocket,
+  FaShieldAlt,
+  FaChartLine,
+  FaGlobe,
   FaLightbulb,
   FaHeart,
   FaStar,
@@ -28,10 +28,10 @@ const Dashboard: NextPage = () => {
   }, []);
 
   if (loading) return <Loading fullScreen />;
-  
+
   if (error) return (
     <div className="min-h-screen flex items-center justify-center">
-      <motion.div 
+      <motion.div
         className="glass-intense p-10 rounded-3xl text-center max-w-md shadow-2xl"
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -76,10 +76,10 @@ const Dashboard: NextPage = () => {
         <title>LEWS Dashboard | Landslide Early Warning System</title>
         <meta name="description" content="Advanced colorful real-time landslide monitoring dashboard" />
       </Head>
-      
+
       <div className="min-h-screen pt-28 pb-16">
         {/* Hero Section dengan Gradient Rainbow */}
-        <motion.div 
+        <motion.div
           className="container mx-auto px-6 mb-16"
           variants={containerVariants}
           initial="hidden"
@@ -90,7 +90,7 @@ const Dashboard: NextPage = () => {
               className="inline-flex items-center space-x-3 glass-intense px-6 py-3 rounded-full mb-8"
               whileHover={{ scale: 1.05 }}
             >
-              <motion.div 
+              <motion.div
                 className="w-3 h-3 bg-gradient-to-r from-green-400 to-blue-500 rounded-full"
                 animate={{ scale: [1, 1.2, 1] }}
                 transition={{ repeat: Infinity, duration: 2 }}
@@ -98,43 +98,43 @@ const Dashboard: NextPage = () => {
               <span className="text-sm font-medium text-gray-700">System Online & Monitoring</span>
               <FaHeart className="text-red-400 text-sm" />
             </motion.div>
-            
-            <motion.h1 
+
+            <motion.h1
               className="text-6xl md:text-8xl font-bold mb-6 leading-tight text-shadow"
               variants={itemVariants}
             >
-              <span className="text-gradient-rainbow">Smart Earth</span>
+              <span className="text-gradient-rainbow">Smart Alert</span>
               <br />
-              <span className="text-white drop-shadow-lg">Guardian</span>
+              <span className="text-white drop-shadow-lg">Landslide EWS</span>
             </motion.h1>
-            
-            <motion.p 
-              className="text-xl text-white max-w-3xl mx-auto leading-relaxed drop-shadow-lg font-medium"
+
+            <motion.p
+              className="text-xl text-black max-w-3xl mx-auto leading-relaxed drop-shadow-lg font-medium"
               variants={itemVariants}
             >
-              Advanced AI-powered landslide detection and early warning system with real-time monitoring, 
+              Advanced AI-powered landslide detection and early warning system with real-time monitoring,
               beautiful visualizations, and community-driven safety initiatives ✨
             </motion.p>
 
-            <motion.div 
+            <motion.div
               className="flex justify-center space-x-6 mt-8"
               variants={itemVariants}
             >
-              <motion.div 
+              <motion.div
                 className="flex items-center space-x-2 glass-intense px-4 py-2 rounded-full"
                 whileHover={{ scale: 1.05 }}
               >
                 <FaGlobe className="text-blue-500" />
                 <span className="text-sm font-medium text-gray-700">24/7 Monitoring</span>
               </motion.div>
-              <motion.div 
+              <motion.div
                 className="flex items-center space-x-2 glass-intense px-4 py-2 rounded-full"
                 whileHover={{ scale: 1.05 }}
               >
                 <FaLightbulb className="text-yellow-500" />
                 <span className="text-sm font-medium text-gray-700">AI Predictions</span>
               </motion.div>
-              <motion.div 
+              <motion.div
                 className="flex items-center space-x-2 glass-intense px-4 py-2 rounded-full"
                 whileHover={{ scale: 1.05 }}
               >
@@ -146,7 +146,7 @@ const Dashboard: NextPage = () => {
         </motion.div>
 
         {/* Status Summary dengan Efek Colorful */}
-        <motion.div 
+        <motion.div
           className="container mx-auto px-6 mb-16"
           variants={containerVariants}
           initial="hidden"
@@ -156,13 +156,13 @@ const Dashboard: NextPage = () => {
         </motion.div>
 
         {/* Sensor Cards Grid dengan Animasi Stagger */}
-        <motion.div 
+        <motion.div
           className="container mx-auto px-6 mb-16"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
-          <motion.div 
+          <motion.div
             className="flex items-center justify-center mb-12"
             variants={itemVariants}
           >
@@ -172,8 +172,8 @@ const Dashboard: NextPage = () => {
             </h2>
             <FaMagic className="text-purple-500 text-2xl ml-4" />
           </motion.div>
-          
-          <motion.div 
+
+          <motion.div
             className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8"
             variants={containerVariants}
           >
@@ -191,13 +191,13 @@ const Dashboard: NextPage = () => {
         </motion.div>
 
         {/* Analytics Section dengan Glass Effect */}
-        <motion.div 
+        <motion.div
           className="container mx-auto px-6 mb-16"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
-          <motion.div 
+          <motion.div
             className="glass-intense rounded-3xl p-10 rainbow-shimmer"
             variants={itemVariants}
             whileHover={{ scale: 1.01 }}
@@ -216,7 +216,7 @@ const Dashboard: NextPage = () => {
         </motion.div>
 
         {/* Quick Actions dengan Colorful Cards */}
-        <motion.div 
+        <motion.div
           className="container mx-auto px-6"
           variants={containerVariants}
           initial="hidden"

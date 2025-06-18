@@ -11,19 +11,19 @@ import Loading from '../components/common/Loading';
 const MapPage: NextPage = () => {
   const [filterStatus, setFilterStatus] = useState<string | null>(null);
   const { sensors, loading } = useSensors();
-  
-  const filteredSensors = filterStatus 
+
+  const filteredSensors = filterStatus
     ? sensors.filter(sensor => sensor.status === filterStatus)
     : sensors;
 
   return (
-    <>
+    <div className='pt-28'>
       <Head>
         <title>Sensor Map | LEWS</title>
       </Head>
-      
+
       <div className="container mx-auto px-4 py-8">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -37,7 +37,7 @@ const MapPage: NextPage = () => {
           <div className="p-4 border-b border-gray-100">
             <MapFilter onFilterChange={setFilterStatus} />
           </div>
-          
+
           <div className="h-[600px] relative">
             {loading ? (
               <Loading />
@@ -45,13 +45,13 @@ const MapPage: NextPage = () => {
               <MapDisplay sensors={filteredSensors} />
             )}
           </div>
-          
+
           <div className="p-4 border-t border-gray-100">
             <MapLegend />
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

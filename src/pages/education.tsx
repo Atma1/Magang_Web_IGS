@@ -11,13 +11,13 @@ const EducationPage: NextPage = () => {
   const [loading, setLoading] = useState(true);
   const [selectedArticle, setSelectedArticle] = useState<EducationContent | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>('all');
-  
+
   useEffect(() => {
     const fetchArticles = async () => {
       try {
         // Simulate API delay
         await new Promise(resolve => setTimeout(resolve, 1000));
-        
+
         // Mock data - in production, replace with API call
         const mockArticles: EducationContent[] = [
           {
@@ -137,7 +137,7 @@ const EducationPage: NextPage = () => {
             tags: ['mitigation', 'engineering', 'prevention']
           }
         ];
-        
+
         setArticles(mockArticles);
         setLoading(false);
       } catch (error) {
@@ -149,8 +149,8 @@ const EducationPage: NextPage = () => {
     fetchArticles();
   }, []);
 
-  const filteredArticles = activeCategory === 'all' 
-    ? articles 
+  const filteredArticles = activeCategory === 'all'
+    ? articles
     : articles.filter(article => article.category === activeCategory);
 
   const openArticle = (article: EducationContent) => {
@@ -178,13 +178,13 @@ const EducationPage: NextPage = () => {
   if (loading) return <Loading />;
 
   return (
-    <>
+    <div className='pt-28'>
       <Head>
         <title>Education Resources | LEWS</title>
       </Head>
-      
+
       <div className="container mx-auto px-4 py-8">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -203,14 +203,14 @@ const EducationPage: NextPage = () => {
           >
             {selectedArticle.imageUrl && (
               <div className="h-64 overflow-hidden">
-                <img 
-                  src={selectedArticle.imageUrl} 
+                <img
+                  src={selectedArticle.imageUrl}
                   alt={selectedArticle.title}
                   className="w-full h-full object-cover"
                 />
               </div>
             )}
-            
+
             <div className="p-6">
               <div className="flex justify-between items-start">
                 <div>
@@ -223,19 +223,19 @@ const EducationPage: NextPage = () => {
                     ))}
                   </div>
                 </div>
-                <button 
+                <button
                   onClick={closeArticle}
                   className="text-gray-400 hover:text-gray-600"
                 >
                   &times;
                 </button>
               </div>
-              
-              <div 
+
+              <div
                 className="prose max-w-none"
                 dangerouslySetInnerHTML={{ __html: selectedArticle.content }}
               ></div>
-              
+
               <button
                 onClick={closeArticle}
                 className="mt-6 inline-flex items-center px-4 py-2 border border-primary-300 text-sm font-medium rounded-md text-primary-700 bg-primary-50 hover:bg-primary-100"
@@ -257,54 +257,50 @@ const EducationPage: NextPage = () => {
                   placeholder="Search articles..."
                 />
               </div>
-              
+
               <div className="flex space-x-2 overflow-x-auto pb-2">
                 <button
                   onClick={() => setActiveCategory('all')}
-                  className={`px-3 py-1 rounded-md text-sm font-medium whitespace-nowrap ${
-                    activeCategory === 'all' 
-                      ? 'bg-primary-100 text-primary-700' 
+                  className={`px-3 py-1 rounded-md text-sm font-medium whitespace-nowrap ${activeCategory === 'all'
+                      ? 'bg-primary-100 text-primary-700'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
+                    }`}
                 >
                   All Topics
                 </button>
                 <button
                   onClick={() => setActiveCategory('awareness')}
-                  className={`px-3 py-1 rounded-md text-sm font-medium whitespace-nowrap ${
-                    activeCategory === 'awareness' 
-                      ? 'bg-blue-100 text-blue-700' 
+                  className={`px-3 py-1 rounded-md text-sm font-medium whitespace-nowrap ${activeCategory === 'awareness'
+                      ? 'bg-blue-100 text-blue-700'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
+                    }`}
                 >
                   <FaBookOpen className="inline mr-1" />
                   Awareness
                 </button>
                 <button
                   onClick={() => setActiveCategory('preparedness')}
-                  className={`px-3 py-1 rounded-md text-sm font-medium whitespace-nowrap ${
-                    activeCategory === 'preparedness' 
-                      ? 'bg-yellow-100 text-yellow-700' 
+                  className={`px-3 py-1 rounded-md text-sm font-medium whitespace-nowrap ${activeCategory === 'preparedness'
+                      ? 'bg-yellow-100 text-yellow-700'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
+                    }`}
                 >
                   <FaExclamationTriangle className="inline mr-1" />
                   Preparedness
                 </button>
                 <button
                   onClick={() => setActiveCategory('prevention')}
-                  className={`px-3 py-1 rounded-md text-sm font-medium whitespace-nowrap ${
-                    activeCategory === 'prevention' 
-                      ? 'bg-green-100 text-green-700' 
+                  className={`px-3 py-1 rounded-md text-sm font-medium whitespace-nowrap ${activeCategory === 'prevention'
+                      ? 'bg-green-100 text-green-700'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
+                    }`}
                 >
                   <FaShieldAlt className="inline mr-1" />
                   Prevention
                 </button>
               </div>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredArticles.map((article, index) => (
                 <motion.div
@@ -317,33 +313,32 @@ const EducationPage: NextPage = () => {
                 >
                   {article.imageUrl && (
                     <div className="h-40 overflow-hidden">
-                      <img 
-                        src={article.imageUrl} 
+                      <img
+                        src={article.imageUrl}
                         alt={article.title}
                         className="w-full h-full object-cover transition-transform hover:scale-105"
                       />
                     </div>
                   )}
-                  
+
                   <div className="p-4">
                     <div className="flex items-center mb-2">
-                      <span className={`p-1.5 rounded-full mr-2 ${
-                        article.category === 'awareness'
+                      <span className={`p-1.5 rounded-full mr-2 ${article.category === 'awareness'
                           ? 'bg-blue-100 text-blue-600'
                           : article.category === 'preparedness'
-                          ? 'bg-yellow-100 text-yellow-600'
-                          : 'bg-green-100 text-green-600'
-                      }`}>
+                            ? 'bg-yellow-100 text-yellow-600'
+                            : 'bg-green-100 text-green-600'
+                        }`}>
                         {getCategoryIcon(article.category)}
                       </span>
                       <span className="text-xs font-medium text-gray-500 capitalize">
                         {article.category}
                       </span>
                     </div>
-                    
+
                     <h3 className="font-bold text-lg mb-2 text-gray-800">{article.title}</h3>
                     <p className="text-gray-600 text-sm mb-4 line-clamp-2">{article.summary}</p>
-                    
+
                     <button
                       className="text-primary-600 text-sm font-medium hover:text-primary-800"
                     >
@@ -356,7 +351,7 @@ const EducationPage: NextPage = () => {
           </>
         )}
       </div>
-    </>
+    </div>
   );
 };
 
