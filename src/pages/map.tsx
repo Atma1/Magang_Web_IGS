@@ -35,7 +35,7 @@ const MapPage: NextPage = () => {
 
         <div className="bg-white rounded-xl shadow-card">
           <div className="p-4 border-b border-gray-100">
-            <MapFilter onFilterChange={setFilterStatus} />
+            <MapFilter onFilterChange={setFilterStatus} filter={filterStatus} />
           </div>
 
           <div className="h-[600px] relative">
