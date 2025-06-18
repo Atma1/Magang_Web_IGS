@@ -1,15 +1,15 @@
 import { FC } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { 
-  FaMapMarkerAlt, 
-  FaTemperatureHigh, 
-  FaTint, 
+import {
+  FaMapMarkerAlt,
+  FaTemperatureHigh,
+  FaTint,
   FaArrowsAltH,
   FaExternalLinkAlt,
   FaShieldAlt,
   FaExclamationTriangle,
-  FaTimesCircle
+  FaExclamationCircle
 } from 'react-icons/fa';
 import { Sensor } from '../../types';
 
@@ -20,7 +20,7 @@ interface SensorStatusCardProps {
 const SensorStatusCard: FC<SensorStatusCardProps> = ({ sensor }) => {
   const getStatusConfig = (status: Sensor['status']) => {
     switch (status) {
-      case 'Normal': 
+      case 'Normal':
         return {
           gradient: 'from-emerald-400 via-blue-500 to-purple-600',
           bgClass: 'bg-gradient-to-br from-emerald-50 to-blue-50',
@@ -31,7 +31,7 @@ const SensorStatusCard: FC<SensorStatusCardProps> = ({ sensor }) => {
           statusText: 'text-white',
           glowClass: 'neon-green'
         };
-      case 'Siaga': 
+      case 'Siaga':
         return {
           gradient: 'from-yellow-400 via-orange-500 to-red-500',
           bgClass: 'bg-gradient-to-br from-yellow-50 to-orange-50',
@@ -42,18 +42,18 @@ const SensorStatusCard: FC<SensorStatusCardProps> = ({ sensor }) => {
           statusText: 'text-white',
           glowClass: 'neon-pink'
         };
-      case 'Bahaya': 
+      case 'Bahaya':
         return {
           gradient: 'from-red-400 via-pink-500 to-purple-600',
           bgClass: 'bg-gradient-to-br from-red-50 to-pink-50',
           borderClass: 'border-red-200',
-          icon: FaTimesCircle,
+          icon: FaExclamationCircle,
           iconColor: 'text-red-600',
           statusBg: 'bg-gradient-to-r from-red-400 to-pink-500',
           statusText: 'text-white',
           glowClass: 'neon-blue'
         };
-      default: 
+      default:
         return {
           gradient: 'from-gray-400 to-gray-600',
           bgClass: 'bg-gradient-to-br from-gray-50 to-gray-100',
@@ -70,25 +70,25 @@ const SensorStatusCard: FC<SensorStatusCardProps> = ({ sensor }) => {
   const statusConfig = getStatusConfig(sensor.status);
 
   const dataPoints = [
-    { 
-      icon: FaTemperatureHigh, 
-      label: 'Temperature', 
+    {
+      icon: FaTemperatureHigh,
+      label: 'Temperature',
       value: `${sensor.temperature}°C`,
       color: 'text-red-500',
       bgColor: 'bg-gradient-to-br from-red-100 to-pink-100',
       borderColor: 'border-red-200'
     },
-    { 
-      icon: FaTint, 
-      label: 'Moisture', 
+    {
+      icon: FaTint,
+      label: 'Moisture',
       value: `${sensor.moisture}%`,
       color: 'text-blue-500',
       bgColor: 'bg-gradient-to-br from-blue-100 to-cyan-100',
       borderColor: 'border-blue-200'
     },
-    { 
-      icon: FaArrowsAltH, 
-      label: 'Movement', 
+    {
+      icon: FaArrowsAltH,
+      label: 'Movement',
       value: `${sensor.movement} mm`,
       color: 'text-purple-500',
       bgColor: 'bg-gradient-to-br from-purple-100 to-pink-100',
@@ -107,7 +107,7 @@ const SensorStatusCard: FC<SensorStatusCardProps> = ({ sensor }) => {
       <div className={`relative p-6 pb-4 ${statusConfig.bgClass}`}>
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
-            <motion.h3 
+            <motion.h3
               className="text-2xl font-bold text-gray-800 mb-2"
               whileHover={{ scale: 1.05 }}
             >
@@ -118,8 +118,8 @@ const SensorStatusCard: FC<SensorStatusCardProps> = ({ sensor }) => {
               <span className="font-medium">{sensor.location}</span>
             </div>
           </div>
-          
-          <motion.div 
+
+          <motion.div
             className={`flex items-center space-x-2 px-4 py-2 rounded-2xl ${statusConfig.statusBg} shadow-lg`}
             whileHover={{ scale: 1.05, rotate: 5 }}
             animate={sensor.status === 'Bahaya' ? { scale: [1, 1.05, 1] } : {}}
@@ -133,7 +133,7 @@ const SensorStatusCard: FC<SensorStatusCardProps> = ({ sensor }) => {
         </div>
 
         {/* Status Indicator Rainbow Line */}
-        <motion.div 
+        <motion.div
           className={`h-2 rounded-full bg-gradient-to-r ${statusConfig.gradient} shadow-lg`}
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
@@ -172,7 +172,7 @@ const SensorStatusCard: FC<SensorStatusCardProps> = ({ sensor }) => {
           <div className="text-xs text-gray-500 font-medium">
             Updated: {new Date(sensor.lastUpdate).toLocaleTimeString()}
           </div>
-          
+
           <Link href={`/map?sensor=${sensor.id}`}>
             <motion.div
               className="flex items-center space-x-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-xl text-sm font-bold hover:from-purple-600 hover:to-blue-500 transition-all duration-300 shadow-lg"
