@@ -1,3 +1,4 @@
+import { SignOutButton, SignedIn } from '@clerk/nextjs';
 import { motion } from 'framer-motion';
 import { FaPlus, FaChartBar, FaFileAlt } from 'react-icons/fa';
 
@@ -111,7 +112,10 @@ const AdminSidebar = ({ activeTab, setActiveTab, sidebarOpen, sensorsCount }: Ad
 
                 {/* Footer */}
                 <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-white/20">
-                    <div className="text-center">
+                    <div className="text-center text-gray-500 hover:text-gray-400">
+                        <SignedIn>
+                            <SignOutButton />
+                        </SignedIn>
                         <div className="text-sm text-gray-500">LEWS Admin v1.0</div>
                         <div className="text-xs text-gray-400 mt-1">Secure Dashboard</div>
                     </div>
