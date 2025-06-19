@@ -41,8 +41,8 @@ const Navbar: FC = () => {
   return (
     <motion.nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${scrolled
-          ? 'glass-intense backdrop-blur-md shadow-xl'
-          : 'bg-transparent'
+        ? 'glass-intense backdrop-blur-md shadow-xl'
+        : 'bg-transparent'
         }`}
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
@@ -91,8 +91,8 @@ const Navbar: FC = () => {
                 <Link href={link.path}>
                   <motion.div
                     className={`relative px-6 py-3 rounded-2xl transition-all duration-300 group ${isActive(link.path)
-                        ? 'glass-card text-gray-700 shadow-lg'
-                        : 'text-gray-600 hover:text-gray-800 hover:glass-card'
+                      ? 'glass-card text-gray-700 shadow-lg'
+                      : 'text-gray-600 hover:text-gray-800 hover:glass-card'
                       }`}
                     whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.95 }}
@@ -100,14 +100,14 @@ const Navbar: FC = () => {
                     <div className="flex items-center space-x-3">
                       <link.icon className={`w-5 h-5 ${link.color}`} />
                       <span className="font-medium">{link.title}</span>
+                      {isActive(link.path) && (
+                        <motion.div
+                          className="absolute w-full -bottom-2 -left-3 transform -translate-x-1/2 h-1 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 rounded-full"
+                          layoutId="activeTab"
+                          transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                        />
+                      )}
                     </div>
-                    {isActive(link.path) && (
-                      <motion.div
-                        className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-8 h-1 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 rounded-full"
-                        layoutId="activeTab"
-                        transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                      />
-                    )}
                     <motion.div
                       className="absolute inset-0 bg-gradient-to-r from-blue-400/10 via-purple-500/10 to-pink-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                       initial={false}
@@ -193,8 +193,8 @@ const Navbar: FC = () => {
                     <Link href={link.path} onClick={() => setIsOpen(false)}>
                       <motion.div
                         className={`flex items-center space-x-4 px-8 py-4 transition-all duration-300 ${isActive(link.path)
-                            ? 'bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 border-r-4 border-blue-400'
-                            : 'hover:bg-gradient-to-r hover:from-blue-25 hover:to-purple-25'
+                          ? 'bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 border-r-4 border-blue-400'
+                          : 'hover:bg-gradient-to-r hover:from-blue-25 hover:to-purple-25'
                           }`}
                         whileHover={{ scale: 1.02, x: 10 }}
                         whileTap={{ scale: 0.98 }}
