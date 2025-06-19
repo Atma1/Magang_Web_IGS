@@ -57,7 +57,7 @@ const AdminSidebar = ({ activeTab, setActiveTab, sidebarOpen, sensorsCount }: Ad
                     <h1 className="text-2xl font-bold">
                         Admin Dashboard
                     </h1>
-                    <p className="text-gray-600 text-sm mt-2">Atur Smart Alert LEWS</p>
+                    <p className="text-gray-600 text-sm mt-2">Smart Alert Landslide Early Warning System Admin Dashboard</p>
                 </div>
 
                 {/* Menu Items */}

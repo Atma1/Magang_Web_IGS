@@ -1,3 +1,5 @@
+'use client';
+
 import React, { ReactNode } from 'react';
 import Navbar from './Navbar';
 import Footer from './Footer';
@@ -10,9 +12,7 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <Navbar />
-      
-      <motion.main 
+      <motion.main
         className="flex-grow"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -20,7 +20,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       >
         {children}
       </motion.main>
-      
+
       <Footer />
     </div>
   );

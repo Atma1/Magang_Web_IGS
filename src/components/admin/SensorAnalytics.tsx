@@ -42,7 +42,7 @@ const SensorAnalytics = ({ sensors }: SensorAnalyticsProps) => {
                 temperature: 25 + Math.random() * 10,
                 moisture: 50 + Math.random() * 30,
                 movement: Math.random() * 5,
-                avgTemp: sensors.reduce((acc, s) => acc + s.temperature, 0) / sensors.length + (Math.random() - 0.5) * 5,
+                avgTemp: (sensors.reduce((acc, s) => acc + s.temperature, 0) / sensors.length + (Math.random() - 0.5) * 5).toFixed(3),
                 avgMoisture: sensors.reduce((acc, s) => acc + s.moisture, 0) / sensors.length + (Math.random() - 0.5) * 10,
                 avgMovement: sensors.reduce((acc, s) => acc + s.movement, 0) / sensors.length + Math.random() * 2
             });
@@ -102,7 +102,7 @@ const SensorAnalytics = ({ sensors }: SensorAnalyticsProps) => {
                         <select
                             value={selectedTimeRange}
                             onChange={(e) => setSelectedTimeRange(e.target.value as any)}
-                            className="px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="px-8 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
                             <option value="24h">Last 24 Hours</option>
                             <option value="7d">Last 7 Days</option>
@@ -170,7 +170,7 @@ const SensorAnalytics = ({ sensors }: SensorAnalyticsProps) => {
                         <select
                             value={selectedMetric}
                             onChange={(e) => setSelectedMetric(e.target.value as any)}
-                            className="px-3 py-1 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                            className="px-8 py-1 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                         >
                             <option value="temperature">Temperature</option>
                             <option value="moisture">Moisture</option>
@@ -328,8 +328,8 @@ const SensorAnalytics = ({ sensors }: SensorAnalyticsProps) => {
                                         <td className="py-4 px-4 text-gray-600">{sensor.location}</td>
                                         <td className="py-4 px-4">
                                             <span className={`px-3 py-1 rounded-full text-xs font-medium ${sensor.status === 'Normal' ? 'bg-green-100 text-green-800' :
-                                                    sensor.status === 'Siaga' ? 'bg-yellow-100 text-yellow-800' :
-                                                        'bg-red-100 text-red-800'
+                                                sensor.status === 'Siaga' ? 'bg-yellow-100 text-yellow-800' :
+                                                    'bg-red-100 text-red-800'
                                                 }`}>
                                                 {sensor.status}
                                             </span>
@@ -342,8 +342,8 @@ const SensorAnalytics = ({ sensors }: SensorAnalyticsProps) => {
                                                 <div className="w-20 bg-gray-200 rounded-full h-2">
                                                     <div
                                                         className={`h-2 rounded-full ${performance >= 80 ? 'bg-green-500' :
-                                                                performance >= 60 ? 'bg-yellow-500' :
-                                                                    'bg-red-500'
+                                                            performance >= 60 ? 'bg-yellow-500' :
+                                                                'bg-red-500'
                                                             }`}
                                                         style={{ width: `${Math.min(performance, 100)}%` }}
                                                     />

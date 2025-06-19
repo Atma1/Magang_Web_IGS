@@ -1,17 +1,17 @@
-import { NextPage } from 'next';
+'use client';
+
 import { useState } from 'react';
-import Head from 'next/head';
 import { motion } from 'framer-motion';
 import { FaTimes, FaBars } from 'react-icons/fa';
-import { useSensors } from '@/hooks/useSensors';
-import AdminSensorSummary from '@/components/admin/AdminSensorSummary';
-import AddSensorForm from '@/components/admin/AddSensorForm';
-import AdminReports from '@/components/admin/AdminReports';
-import SensorAnalytics from '@/components/admin/SensorAnalytics';
-import AdminSidebar from '@/components/admin/AdminSidebar';
-import Loading from '@/components/common/Loading';
+import { useSensors } from '../../../hooks/useSensors';
+import AdminSensorSummary from '../../../components/admin/AdminSensorSummary';
+import AddSensorForm from '../../../components/admin/AddSensorForm';
+import AdminReports from '../../../components/admin/AdminReports';
+import SensorAnalytics from '../../../components/admin/SensorAnalytics';
+import AdminSidebar from '../../../components/admin/AdminSidebar';
+import Loading from '../../../components/common/Loading';
 
-const AdminDashboard: NextPage = () => {
+export default function AdminDashboard() {
     const [activeTab, setActiveTab] = useState<'summary' | 'add-sensor' | 'reports' | 'analytics'>('summary');
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const { sensors, loading, error } = useSensors();
@@ -67,12 +67,7 @@ const AdminDashboard: NextPage = () => {
     };
 
     return (
-        <div className='pt-24'>
-            <Head>
-                <title>Admin Dashboard | LEWS</title>
-                <meta name="description" content="Admin dashboard for landslide early warning system" />
-            </Head>
-
+        <div>
             <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50">
                 {/* Mobile Menu Toggle */}
                 <div className="lg:hidden fixed top-4 left-4 z-50">
@@ -141,6 +136,4 @@ const AdminDashboard: NextPage = () => {
             </div>
         </div>
     );
-};
-
-export default AdminDashboard;
+}

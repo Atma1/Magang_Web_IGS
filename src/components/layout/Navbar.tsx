@@ -1,6 +1,8 @@
+'use client';
+
 import { FC, useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   FaBars,
@@ -18,7 +20,7 @@ import {
 const Navbar: FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const router = useRouter();
+  const pathname = usePathname();
 
   const navLinks = [
     { title: 'Dashboard', path: '/', icon: FaHome, color: 'text-blue-600' },
@@ -28,7 +30,7 @@ const Navbar: FC = () => {
     { title: 'Admin', path: '/admin', icon: FaUserShield, color: 'text-red-600' },
   ];
 
-  const isActive = (path: string) => router.pathname === path;
+  const isActive = (path: string) => pathname === path;
 
   useEffect(() => {
     const handleScroll = () => {
