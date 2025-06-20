@@ -74,9 +74,9 @@ const Navbar: FC = () => {
                   className="text-3xl font-bold text-gradient-rainbow"
                   whileHover={{ scale: 1.05 }}
                 >
-                  LEWS
+                  Smart Alert
                 </motion.h1>
-                <div className="text-xs text-gray-500 font-medium -mt-1">Early Warning System</div>
+                <div className="text-xs text-gray-500 font-medium -mt-1">Landslide Early Warning System</div>
               </div>
             </Link>
           </motion.div>

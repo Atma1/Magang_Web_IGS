@@ -156,7 +156,7 @@ export default function NotFound() {
                     transition={{ duration: 0.6, delay: 1 }}
                     className="mt-8 text-sm text-gray-500"
                 >
-                    💡 Fun fact: Real landslide monitoring helps prevent disasters by detecting ground movement early!
+                    💡 Fun fact: Landslide monitoring helps prevent disasters by detecting ground movement early!
                 </motion.div>
             </div>
         </div>

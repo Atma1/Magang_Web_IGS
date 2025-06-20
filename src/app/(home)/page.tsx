@@ -192,7 +192,7 @@ export default function Dashboard() {
                     animate="visible"
                 >
                     <motion.div
-                        className="glass-intense rounded-3xl p-10 rainbow-shimmer"
+                        className="rounded-3xl p-10"
                         variants={itemVariants}
                         whileHover={{ scale: 1.01 }}
                     >
