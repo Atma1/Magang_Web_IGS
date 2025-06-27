@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 import ReportForm from '../../../components/reports/ReportForm';
 import ReportsList from '../../../components/reports/ReportsList';
