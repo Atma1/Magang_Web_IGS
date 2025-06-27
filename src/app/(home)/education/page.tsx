@@ -1,64 +1,16 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FaSearch, FaBookOpen, FaExclamationTriangle, FaShieldAlt } from 'react-icons/fa';
-import { EducationContent } from '../../../types';
-import Loading from '../../../components/common/Loading';
+import { useState } from 'react';
+import { FaBookOpen, FaExclamationTriangle, FaShieldAlt } from 'react-icons/fa';
+import { EducationContent } from '@/types';
+import Loading from '@/components/common/Loading';
+import { useFetchArticles } from '@/hooks/useFetchArticles';
 
 export default function EducationPage() {
-    const [articles, setArticles] = useState<EducationContent[]>([]);
-    const [loading, setLoading] = useState(true);
+    const { articles, loading } = useFetchArticles();
     const [selectedArticle, setSelectedArticle] = useState<EducationContent | null>(null);
     const [activeCategory, setActiveCategory] = useState<string>('all');
-
-    useEffect(() => {
-        const fetchArticles = async () => {
-            try {
-                // Simulate API delay
-                await new Promise(resolve => setTimeout(resolve, 1000));
-
-                // Mock data - in production, replace with API call
-                const mockArticles: EducationContent[] = [
-                    {
-                        id: 'e001',
-                        title: 'Understanding Landslide Risk Factors',
-                        summary: 'Learn about the various factors that contribute to landslide risks in mountainous regions.',
-                        content: 'Content about landslide risk factors...',
-                        imageUrl: '/images/education/risk-factors.jpg',
-                        category: 'awareness',
-                        tags: ['risk', 'causes', 'geology']
-                    },
-                    {
-                        id: 'e002',
-                        title: 'Landslide Early Warning Signs',
-                        summary: 'Recognize the warning signs that could indicate an imminent landslide.',
-                        content: 'Content about warning signs...',
-                        imageUrl: '/images/education/warning-signs.jpg',
-                        category: 'awareness',
-                        tags: ['warning signs', 'safety', 'observation']
-                    },
-                    {
-                        id: 'e003',
-                        title: 'Emergency Response During a Landslide Event',
-                        summary: 'Critical actions to take if you find yourself in an active landslide situation.',
-                        content: 'Content about emergency response...',
-                        imageUrl: '/images/education/emergency-response.jpg',
-                        category: 'safety',
-                        tags: ['emergency', 'response', 'safety']
-                    }
-                ];
-
-                setArticles(mockArticles);
-            } catch (error) {
-                console.error('Error fetching articles:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchArticles();
-    }, []);
 
     const categories = [
         { id: 'all', label: 'All Topics', icon: FaBookOpen, color: 'blue' },
