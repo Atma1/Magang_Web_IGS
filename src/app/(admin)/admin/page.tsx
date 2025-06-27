@@ -3,13 +3,13 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaTimes, FaBars } from 'react-icons/fa';
-import { useSensors } from '../../../hooks/useSensors';
-import AdminSensorSummary from '../../../components/admin/AdminSensorSummary';
-import AddSensorForm from '../../../components/admin/AddSensorForm';
-import AdminReports from '../../../components/admin/AdminReports';
-import SensorAnalytics from '../../../components/admin/SensorAnalytics';
-import AdminSidebar from '../../../components/admin/AdminSidebar';
-import Loading from '../../../components/common/Loading';
+import { useSensors } from '@/hooks/useSensors';
+import AdminSensorSummary from '@/components/admin/AdminSensorSummary';
+import AddSensorForm from '@/components/admin/AddSensorForm';
+import AdminReports from '@/components/admin/AdminReports';
+import SensorAnalytics from '@/components/admin/SensorAnalytics';
+import AdminSidebar from '@/components/admin/AdminSidebar';
+import Loading from '@/components/common/Loading';
 
 export default function AdminDashboard() {
     const [activeTab, setActiveTab] = useState<'summary' | 'add-sensor' | 'reports' | 'analytics'>('summary');
