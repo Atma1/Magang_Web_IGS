@@ -1,20 +1,30 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import Map, { FullscreenControl, GeolocateControl, MapRef, Marker, NavigationControl, Popup } from 'react-map-gl/mapbox'
-import { Sensor } from '../../types';
+import { Sensor } from '@/types';
 import { IoCloseCircle } from 'react-icons/io5';
 import "mapbox-gl/dist/mapbox-gl.css";
 
 interface MapDisplayProps {
   sensors: Sensor[];
+  querySensor: string;
 }
 
-const MapDisplay: React.FC<MapDisplayProps> = ({ sensors }) => {
+const MapDisplay: React.FC<MapDisplayProps> = ({ sensors, querySensor }) => {
   const [selectedSensor, setSelectedSensor] = useState<Sensor | null>(null);
   const [viewState, setViewState] = useState({
     longitude: 107.6194,
     latitude: -6.9122,
     zoom: 12
   });
+
+  useEffect(() => {
+    if (querySensor !== 'none' && sensors.length > 0) {
+      const foundSensor = sensors.find((sensor) => sensor.id === querySensor);
+      if (foundSensor) {
+        setSelectedSensor(foundSensor);
+      }
+    }
+  }, [querySensor, sensors]);
 
   const getMarkerColor = (status: string) => {
     switch (status.toLowerCase()) {
