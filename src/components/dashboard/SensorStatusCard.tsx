@@ -98,7 +98,7 @@ const SensorStatusCard: FC<SensorStatusCardProps> = ({ sensor }) => {
 
   return (
     <motion.div
-      className={`glass-intense rounded-3xl overflow-hidden hover-lift group border-2 ${statusConfig.borderClass} rainbow-shimmer`}
+      className={`rounded-3xl overflow-hidden hover-lift group border-2 ${statusConfig.borderClass} rainbow-shimmer`}
       whileHover={{ scale: 1.02, y: -8 }}
       whileTap={{ scale: 0.98 }}
       layout
@@ -147,11 +147,7 @@ const SensorStatusCard: FC<SensorStatusCardProps> = ({ sensor }) => {
           {dataPoints.map((point, index) => (
             <motion.div
               key={point.label}
-              className={`${point.bgColor} ${point.borderColor} border rounded-2xl p-4 text-center hover-lift`}
-              initial={{ opacity: 0, y: 20, scale: 0.8 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ delay: index * 0.1 + 0.3 }}
-              whileHover={{ scale: 1.05, rotate: 2 }}
+              className={`${point.bgColor} ${point.borderColor} border rounded-2xl p-4 text-center z-10`}
             >
               <motion.div
                 whileHover={{ rotate: 360 }}
@@ -169,17 +165,17 @@ const SensorStatusCard: FC<SensorStatusCardProps> = ({ sensor }) => {
       {/* Footer dengan Gradient Button */}
       <div className="px-6 py-4 border-t border-gray-100 bg-gradient-to-r from-gray-50 to-blue-50">
         <div className="flex items-center justify-between">
-          <div className="text-xs text-gray-500 font-medium">
+          <div className="text-xs text-gray-500 font-medium z-10">
             Updated: {new Date(sensor.lastUpdate).toLocaleTimeString()}
           </div>
 
-          <Link href={`/map?sensor=${sensor.id}`}>
+          <Link href={`/map?sensor=${sensor.id}`} className="relative z-10">
             <motion.div
               className="flex items-center space-x-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-xl text-sm font-bold hover:from-purple-600 hover:to-blue-500 transition-all duration-300 shadow-lg"
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
             >
-              <span>View Details</span>
+              <span>View Sensor</span>
               <FaExternalLinkAlt className="text-xs" />
             </motion.div>
           </Link>
