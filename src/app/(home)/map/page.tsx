@@ -2,15 +2,19 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import MapDisplay from '../../../components/map/MapDisplay';
-import MapLegend from '../../../components/map/MapLegend';
-import MapFilter from '../../../components/map/MapFilter';
-import { useSensors } from '../../../hooks/useSensors';
-import Loading from '../../../components/common/Loading';
+import MapDisplay from '@/components/map/MapDisplay';
+import MapLegend from '@/components/map/MapLegend';
+import MapFilter from '@/components/map/MapFilter';
+import { useSensors } from '@/hooks/useSensors';
+import Loading from '@/components/common/Loading';
+import { useSearchParams } from 'next/navigation';
 
 export default function MapPage() {
     const [filterStatus, setFilterStatus] = useState<string | null>(null);
     const { sensors, loading } = useSensors();
+    const searchParams = useSearchParams()
+
+    const sensorQuery = searchParams.get('sensor') || 'none';
 
     const filteredSensors = filterStatus
         ? sensors.filter(sensor => sensor.status === filterStatus)
@@ -38,7 +42,7 @@ export default function MapPage() {
                         {loading ? (
                             <Loading />
                         ) : (
-                            <MapDisplay sensors={filteredSensors} />
+                            <MapDisplay sensors={filteredSensors} querySensor={sensorQuery} />
                         )}
                     </div>
 

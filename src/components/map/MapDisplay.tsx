@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import Map, { FullscreenControl, GeolocateControl, MapRef, Marker, NavigationControl, Popup } from 'react-map-gl/mapbox'
-import { Sensor } from '../../types';
+import { Sensor } from '@/types';
 import { IoCloseCircle } from 'react-icons/io5';
 import "mapbox-gl/dist/mapbox-gl.css";
 
@@ -39,6 +39,15 @@ const MapDisplay: React.FC = () => {
     };
     fetchSensors();
   }, []);
+
+  useEffect(() => {
+    if (querySensor !== 'none' && sensors.length > 0) {
+      const foundSensor = sensors.find((sensor) => sensor.id === querySensor);
+      if (foundSensor) {
+        setSelectedSensor(foundSensor);
+      }
+    }
+  }, [querySensor, sensors]);
 
   const getMarkerColor = (status: string) => {
     switch (status.toLowerCase()) {

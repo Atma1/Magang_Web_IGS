@@ -72,6 +72,7 @@ export default function Dashboard() {
     return (
         <>
             <div className="min-h-screen pt-28 pb-16">
+                <div className='box'></div>
                 {/* Hero Section dengan Gradient Rainbow */}
                 <motion.div
                     className="container mx-auto px-6 mb-16"
@@ -99,6 +100,7 @@ export default function Dashboard() {
                         >
                             <span className="text-gradient-rainbow">Smart Alert</span>
                             <br />
+
                             <span className="text-white drop-shadow-lg">Landslide EWS</span>
                         </motion.h1>
 
