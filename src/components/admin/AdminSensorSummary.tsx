@@ -1,32 +1,49 @@
 import { motion } from 'framer-motion';
 import { FaMapMarkerAlt, FaThermometerHalf, FaTint, FaExclamationTriangle } from 'react-icons/fa';
 import { Sensor } from '../../types';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 interface AdminSensorSummaryProps {
     sensors: Sensor[];
 }
 
 const AdminSensorSummary = ({ sensors }: AdminSensorSummaryProps) => {
-    const normalSensors = sensors.filter(s => s.status === 'Normal');
-    const siagaSensors = sensors.filter(s => s.status === 'Siaga');
-    const bahayaSensors = sensors.filter(s => s.status === 'Bahaya');
+    const [sensorsList, setSensorsList] = useState<Sensor[]>([]);
 
-    const avgTemperature = sensors.length > 0
-        ? sensors.reduce((acc, sensor) => acc + sensor.temperature, 0) / sensors.length
+    useEffect(() => {
+        const fetchSensors = async () => {
+            try {
+                const response = await axios.get('http://localhost:5000/api/sensors');
+                setSensorsList(response.data);
+            } catch (error) {
+                console.error('Error fetching sensors:', error);
+            }
+        };
+
+        fetchSensors();
+    }, []);
+
+    const normalSensors = sensorsList.filter(s => s.status === 'Normal');
+    const siagaSensors = sensorsList.filter(s => s.status === 'Siaga');
+    const bahayaSensors = sensorsList.filter(s => s.status === 'Bahaya');
+
+    const avgTemperature = sensorsList.length > 0
+        ? sensorsList.reduce((acc, sensor) => acc + sensor.temperature, 0) / sensorsList.length
         : 0;
 
-    const avgMoisture = sensors.length > 0
-        ? sensors.reduce((acc, sensor) => acc + sensor.moisture, 0) / sensors.length
+    const avgMoisture = sensorsList.length > 0
+        ? sensorsList.reduce((acc, sensor) => acc + sensor.moisture, 0) / sensorsList.length
         : 0;
 
-    const avgMovement = sensors.length > 0
-        ? sensors.reduce((acc, sensor) => acc + sensor.movement, 0) / sensors.length
+    const avgMovement = sensorsList.length > 0
+        ? sensorsList.reduce((acc, sensor) => acc + sensor.movement, 0) / sensorsList.length
         : 0;
 
     const stats = [
         {
             title: 'Total Sensors',
-            value: sensors.length,
+            value: sensorsList.length,
             icon: FaMapMarkerAlt,
             color: 'from-blue-500 to-blue-600',
             bgColor: 'bg-blue-50'
@@ -155,7 +172,7 @@ const AdminSensorSummary = ({ sensors }: AdminSensorSummaryProps) => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {sensors.map((sensor, index) => (
+                                {sensorsList.map((sensor, index) => (
                                     <motion.tr
                                         key={sensor.id}
                                         className="border-b border-gray-100 hover:bg-gray-50/50 transition-colors"

@@ -11,51 +11,40 @@ const AdminReports = () => {
 
     // Mock data - in real app, this would come from an API
     useEffect(() => {
-        const mockReports: Report[] = [
-            {
-                id: 'report_1',
-                name: 'Ahmad Rizky',
-                location: 'Jl. Raya Padang No. 123',
-                latitude: -0.9471,
-                longitude: 100.4172,
-                description: 'Terlihat retakan di tanah dan beberapa pohon mulai miring. Ada suara gemuruh dari arah bukit.',
-                imageUrl: 'https://via.placeholder.com/400x300',
-                status: 'Pending',
-                createdAt: '2025-06-18T10:30:00Z'
-            },
-            {
-                id: 'report_2',
-                name: 'Siti Nurhaliza',
-                location: 'Kampung Baru, Bukittinggi',
-                latitude: -0.3037,
-                longitude: 100.3700,
-                description: 'Air sumber mata air menjadi keruh dan volume berkurang drastis sejak 2 hari yang lalu.',
-                status: 'Verified',
-                createdAt: '2025-06-17T15:45:00Z'
-            },
-            {
-                id: 'report_3',
-                name: 'Budi Santoso',
-                location: 'Desa Koto Baru',
-                latitude: -0.7893,
-                longitude: 100.6505,
-                description: 'Jalan mulai retak dan ada pergerakan tanah di sekitar area perumahan.',
-                status: 'Resolved',
-                createdAt: '2025-06-16T08:20:00Z'
+        const fetchReports = async () => {
+            try {
+              const res = await fetch('http://localhost:5000/api/report');
+              const data = await res.json();
+              setReports(data);
+            } catch (err) {
+              console.error('Failed to fetch reports:', err);
+            } finally {
+              setLoading(false);
             }
-        ];
+          };
+        
+          fetchReports();
+        }, []);
 
-        setTimeout(() => {
-            setReports(mockReports);
-            setLoading(false);
-        }, 1000);
-    }, []);
-
-    const handleStatusChange = (reportId: string, newStatus: Report['status']) => {
-        setReports(prev => prev.map(report =>
-            report.id === reportId ? { ...report, status: newStatus } : report
-        ));
-    };
+        const handleStatusChange = async (reportId: string, newStatus: Report['status']) => {
+            try {
+              await fetch(`http://localhost:5000/api/report/${reportId}/status`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus }),
+              });
+          
+              // Update local state
+              setReports(prev =>
+                prev.map(report =>
+                  report.id === reportId ? { ...report, status: newStatus } : report
+                )
+              );
+            } catch (error) {
+              console.error('Error updating status:', error);
+            }
+          };
+          
 
     const filteredReports = filter === 'all'
         ? reports
@@ -63,18 +52,18 @@ const AdminReports = () => {
 
     const getStatusColor = (status: Report['status']) => {
         switch (status) {
-            case 'Pending': return 'text-yellow-600 bg-yellow-100';
-            case 'Verified': return 'text-blue-600 bg-blue-100';
-            case 'Resolved': return 'text-green-600 bg-green-100';
+            case 'pending': return 'text-yellow-600 bg-yellow-100';
+            case 'verified': return 'text-blue-600 bg-blue-100';
+            case 'resolved': return 'text-green-600 bg-green-100';
             default: return 'text-gray-600 bg-gray-100';
         }
     };
 
     const getStatusIcon = (status: Report['status']) => {
         switch (status) {
-            case 'Pending': return FaClock;
-            case 'Verified': return FaEye;
-            case 'Resolved': return FaCheck;
+            case 'pending': return FaClock;
+            case 'verified': return FaEye;
+            case 'resolved': return FaCheck;
             default: return FaClock;
         }
     };
@@ -107,9 +96,9 @@ const AdminReports = () => {
                         className="px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                         <option value="all">All Reports ({reports.length})</option>
-                        <option value="Pending">Pending ({reports.filter(r => r.status === 'Pending').length})</option>
-                        <option value="Verified">Verified ({reports.filter(r => r.status === 'Verified').length})</option>
-                        <option value="Resolved">Resolved ({reports.filter(r => r.status === 'Resolved').length})</option>
+                        <option value="pending">Pending ({reports.filter(r => r.status === 'pending').length})</option>
+                        <option value="verified">Verified ({reports.filter(r => r.status === 'verified').length})</option>
+                        <option value="resolved">Resolved ({reports.filter(r => r.status === 'resolved').length})</option>
                     </select>
                 </div>
             </div>
@@ -135,7 +124,7 @@ const AdminReports = () => {
                                     {report.status}
                                 </span>
                                 <span className="text-xs text-gray-500">
-                                    {new Date(report.createdAt).toLocaleDateString()}
+                                    {new Date(report.created_at).toLocaleDateString()}
                                 </span>
                             </div>
 
@@ -154,7 +143,7 @@ const AdminReports = () => {
                             </p>
 
                             {/* Image Indicator */}
-                            {report.imageUrl && (
+                            {report.image_path && (
                                 <div className="flex items-center text-sm text-blue-600 mb-4">
                                     <FaImage className="mr-1" />
                                     Image attached
@@ -163,12 +152,12 @@ const AdminReports = () => {
 
                             {/* Actions */}
                             <div className="flex space-x-2">
-                                {report.status === 'Pending' && (
+                                {report.status === 'pending' && (
                                     <>
                                         <button
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                handleStatusChange(report.id, 'Verified');
+                                                handleStatusChange(report.id, 'verified');
                                             }}
                                             className="flex-1 px-3 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors"
                                         >
@@ -177,7 +166,7 @@ const AdminReports = () => {
                                         <button
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                handleStatusChange(report.id, 'Resolved');
+                                                handleStatusChange(report.id, 'resolved');
                                             }}
                                             className="flex-1 px-3 py-2 bg-green-500 text-white rounded-lg text-sm font-medium hover:bg-green-600 transition-colors"
                                         >
@@ -185,18 +174,18 @@ const AdminReports = () => {
                                         </button>
                                     </>
                                 )}
-                                {report.status === 'Verified' && (
+                                {report.status === 'verified' && (
                                     <button
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            handleStatusChange(report.id, 'Resolved');
+                                            handleStatusChange(report.id, 'resolved');
                                         }}
                                         className="flex-1 px-3 py-2 bg-green-500 text-white rounded-lg text-sm font-medium hover:bg-green-600 transition-colors"
                                     >
                                         Mark Resolved
                                     </button>
                                 )}
-                                {report.status === 'Resolved' && (
+                                {report.status === 'resolved' && (
                                     <div className="flex-1 px-3 py-2 bg-gray-100 text-gray-600 rounded-lg text-sm font-medium text-center">
                                         <FaCheck className="inline mr-1" />
                                         Completed
@@ -277,11 +266,11 @@ const AdminReports = () => {
                             </div>
 
                             {/* Image */}
-                            {selectedReport.imageUrl && (
+                            {selectedReport.image_path && (
                                 <div>
                                     <h3 className="font-semibold text-gray-800 mb-2">Attached Image</h3>
                                     <img
-                                        src={selectedReport.imageUrl}
+                                        src={selectedReport.image_path}
                                         alt="Report"
                                         className="w-full rounded-xl border border-gray-200"
                                     />

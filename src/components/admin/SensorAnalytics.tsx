@@ -1,4 +1,5 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import axios from 'axios';
 import { motion } from 'framer-motion';
 import { FaChartLine, FaChartBar, FaMapMarkerAlt, FaCalendarAlt, FaDownload } from 'react-icons/fa';
 import { Sensor } from '../../types';
@@ -25,65 +26,73 @@ interface SensorAnalyticsProps {
 const SensorAnalytics = ({ sensors }: SensorAnalyticsProps) => {
     const [selectedTimeRange, setSelectedTimeRange] = useState<'24h' | '7d' | '30d' | '90d'>('7d');
     const [selectedMetric, setSelectedMetric] = useState<'temperature' | 'moisture' | 'movement'>('temperature');
+    const [statusData, setStatusData] = useState([]);
+    const [performanceData, setPerformanceData] = useState([]);
+    const [timeSeriesData, setTimeSeriesData] = useState([]);
+    const [overviewData, setOverviewData] = useState<any>(null);
 
     // Generate mock time series data
-    const timeSeriesData = useMemo(() => {
-        const days = selectedTimeRange === '24h' ? 1 :
-            selectedTimeRange === '7d' ? 7 :
-                selectedTimeRange === '30d' ? 30 : 90;
-
-        const data = [];
-        for (let i = days; i >= 0; i--) {
-            const date = new Date();
-            date.setDate(date.getDate() - i);
-
-            data.push({
-                date: date.toISOString().split('T')[0],
-                temperature: 25 + Math.random() * 10,
-                moisture: 50 + Math.random() * 30,
-                movement: Math.random() * 5,
-                avgTemp: (sensors.reduce((acc, s) => acc + s.temperature, 0) / sensors.length + (Math.random() - 0.5) * 5).toFixed(3),
-                avgMoisture: sensors.reduce((acc, s) => acc + s.moisture, 0) / sensors.length + (Math.random() - 0.5) * 10,
-                avgMovement: sensors.reduce((acc, s) => acc + s.movement, 0) / sensors.length + Math.random() * 2
-            });
-        }
-        return data;
-    }, [selectedTimeRange, sensors]);
-
-    // Status distribution data
-    const statusData = [
-        { name: 'Normal', value: sensors.filter(s => s.status === 'Normal').length, color: '#10B981' },
-        { name: 'Siaga', value: sensors.filter(s => s.status === 'Siaga').length, color: '#F59E0B' },
-        { name: 'Bahaya', value: sensors.filter(s => s.status === 'Bahaya').length, color: '#EF4444' }
-    ];
-
-    // Sensor performance data
-    const performanceData = sensors.map(sensor => ({
-        name: sensor.name,
-        temperature: sensor.temperature,
-        moisture: sensor.moisture,
-        movement: sensor.movement,
-        score: (100 - sensor.movement * 10 + (sensor.status === 'Normal' ? 20 : sensor.status === 'Siaga' ? 10 : 0))
-    }));
-
-    const handleExportData = () => {
-        const dataToExport = {
-            sensors,
-            timeSeriesData,
-            statusData,
-            performanceData,
-            exportDate: new Date().toISOString()
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const [summaryRes, statusRes, performanceRes] = await Promise.all([
+                    axios.get(`http://localhost:5000/api/sensor-history/summary?range=${selectedTimeRange}`),
+                    axios.get('http://localhost:5000/api/sensor-history/status-distribution'),
+                    axios.get('http://localhost:5000/api/sensor-history/performance'),
+                ]);
+    
+                setTimeSeriesData(
+                    summaryRes.data.map((row: any) => ({
+                        date: row.date,
+                        avgTemp: row.avgTemperature,
+                        avgMoisture: row.avgMoisture,
+                        avgMovement: row.avgMovement,
+                    }))
+                );
+    
+                setStatusData(
+                    statusRes.data.map((item: any) => ({
+                        name: item.status,
+                        value: item.count,
+                        color: item.status === 'Normal' ? '#10B981' : item.status === 'Siaga' ? '#F59E0B' : '#EF4444'
+                    }))
+                );
+    
+                setPerformanceData(performanceRes.data.map((row: any) => ({
+                    id: row.id,
+                    name: row.name,
+                    location: row.location,
+                    temperature: row.temperature,
+                    moisture: row.moisture,
+                    movement: row.movement,
+                    score: row.score
+                })));
+            } catch (err) {
+                console.error('Failed to fetch sensor analytics data:', err);
+            }
         };
 
-        const blob = new Blob([JSON.stringify(dataToExport, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `sensor-analytics-${new Date().toISOString().split('T')[0]}.json`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+    
+        fetchData();
+
+        const fetchOverview = async () => {
+            try {
+              const response = await fetch('http://localhost:5000/api/sensors/overview');
+              const json = await response.json();
+              setOverviewData(json);
+            } catch (error) {
+              console.error('Error fetching overview data:', error);
+            }
+          };
+          fetchOverview();
+    }, [selectedTimeRange]);
+    // const statusLength = setStatusData.data.length;
+    
+    // const data = await fetch('http://localhost:5000/api/sensors/overview').then(res => res.json());
+    
+
+    const handleExportData = () => {
+        window.open(`http://localhost:5000/api/sensor-history/export?range=${selectedTimeRange}&metric=${selectedMetric}`);
     };
 
     return (
@@ -126,11 +135,11 @@ const SensorAnalytics = ({ sensors }: SensorAnalyticsProps) => {
 
             {/* Key Metrics Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {[
-                    { title: 'Total Sensors', value: sensors.length, icon: FaMapMarkerAlt, color: 'from-blue-500 to-blue-600' },
-                    { title: 'Avg Temperature', value: `${(sensors.reduce((acc, s) => acc + s.temperature, 0) / sensors.length).toFixed(1)}°C`, icon: FaChartLine, color: 'from-orange-500 to-red-600' },
-                    { title: 'Avg Moisture', value: `${(sensors.reduce((acc, s) => acc + s.moisture, 0) / sensors.length).toFixed(1)}%`, icon: FaChartBar, color: 'from-blue-500 to-teal-600' },
-                    { title: 'Critical Alerts', value: sensors.filter(s => s.status === 'Bahaya').length, icon: FaChartLine, color: 'from-red-500 to-pink-600' }
+                {overviewData ? ([
+                    { title: 'Total Sensors', value: overviewData.totalSensors, icon: FaMapMarkerAlt, color: 'from-blue-500 to-blue-600' },
+                    { title: 'Avg Temperature', value: `${overviewData.avgTemperature}°C`, icon: FaChartLine, color: 'from-orange-500 to-red-600' },
+                    { title: 'Avg Moisture', value: `${overviewData.avgMoisture}%`, icon: FaChartBar, color: 'from-blue-500 to-teal-600' },
+                    { title: 'Critical Alerts', value: overviewData.criticalAlerts, icon: FaChartLine, color: 'from-red-500 to-pink-600' }
                 ].map((metric, index) => {
                     const IconComponent = metric.icon;
                     return (
@@ -153,7 +162,10 @@ const SensorAnalytics = ({ sensors }: SensorAnalyticsProps) => {
                             </div>
                         </motion.div>
                     );
-                })}
+                })
+            ) : (
+                <p className="col-span-4 text-center text-gray-500">Loading overview...</p>
+            )}
             </div>
 
             {/* Time Series Chart */}
@@ -311,8 +323,8 @@ const SensorAnalytics = ({ sensors }: SensorAnalyticsProps) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {sensors.map((sensor, index) => {
-                                const performance = performanceData.find(p => p.name === sensor.name)?.score || 0;
+                            {performanceData.map((sensor, index) => {
+                                // const performance = performanceData.find(p => p.name === sensor.name)?.score || 0;
                                 return (
                                     <motion.tr
                                         key={sensor.id}
@@ -345,11 +357,11 @@ const SensorAnalytics = ({ sensors }: SensorAnalyticsProps) => {
                                                             performance >= 60 ? 'bg-yellow-500' :
                                                                 'bg-red-500'
                                                             }`}
-                                                        style={{ width: `${Math.min(performance, 100)}%` }}
+                                                        style={{ width: `${Math.min(sensor.score, 100)}%` }}
                                                     />
                                                 </div>
                                                 <span className="text-sm font-medium text-gray-600">
-                                                    {performance.toFixed(0)}%
+                                                    {sensor.score.toFixed(0)}%
                                                 </span>
                                             </div>
                                         </td>

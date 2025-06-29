@@ -1,20 +1,44 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import Map, { FullscreenControl, GeolocateControl, MapRef, Marker, NavigationControl, Popup } from 'react-map-gl/mapbox'
 import { Sensor } from '../../types';
 import { IoCloseCircle } from 'react-icons/io5';
 import "mapbox-gl/dist/mapbox-gl.css";
 
-interface MapDisplayProps {
-  sensors: Sensor[];
-}
+// interface MapDisplayProps {
+//   sensors: Sensor[];
+// }
 
-const MapDisplay: React.FC<MapDisplayProps> = ({ sensors }) => {
+// const MapDisplay: React.FC<MapDisplayProps> = ({ sensors }) => {
+//   const [selectedSensor, setSelectedSensor] = useState<Sensor | null>(null);
+//   const [viewState, setViewState] = useState({
+//     longitude: 107.6194,
+//     latitude: -6.9122,
+//     zoom: 12
+//   });
+const MapDisplay: React.FC = () => {
+  const [sensors, setSensors] = useState<Sensor[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedSensor, setSelectedSensor] = useState<Sensor | null>(null);
   const [viewState, setViewState] = useState({
-    longitude: 107.6194,
-    latitude: -6.9122,
-    zoom: 12
-  });
+        longitude: 107.6194,
+        latitude: -6.9122,
+        zoom: 12
+      });
+
+  useEffect(() => {
+    const fetchSensors = async () => {
+      try {
+        const res = await fetch('http://localhost:5000/api/sensors'); // ganti sesuai endpoint
+        const data = await res.json();
+        setSensors(data);
+        setLoading(false);
+      } catch (err) {
+        console.error('Failed to fetch sensors:', err);
+        setLoading(false);
+      }
+    };
+    fetchSensors();
+  }, []);
 
   const getMarkerColor = (status: string) => {
     switch (status.toLowerCase()) {
