@@ -6,7 +6,7 @@ import { Report } from '../../types';
 const AdminReports = () => {
     const [reports, setReports] = useState<Report[]>([]);
     const [selectedReport, setSelectedReport] = useState<Report | null>(null);
-    const [filter, setFilter] = useState<'all' | 'Pending' | 'Verified' | 'Resolved'>('all');
+    const [filter, setFilter] = useState<'all' | 'pending' | 'verified' | 'resolved'>('all');
     const [loading, setLoading] = useState(true);
 
     // Mock data - in real app, this would come from an API
