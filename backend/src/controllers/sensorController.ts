@@ -35,7 +35,7 @@ export const createSensor = async (req: Request, res: Response) => {
     return res.status(400).json({ message: 'Latitude must be a number between -90 and 90.' });
   }
 
-  if (isNaN(lon) || lon < -180 || lon > 180) {
+  if (isNaN(long) || long < -180 || long > 180) {
     return res.status(400).json({ message: 'Longitude must be a number between -180 and 180.' });
   }
 
