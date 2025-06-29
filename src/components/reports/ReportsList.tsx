@@ -11,57 +11,10 @@ const ReportsList: React.FC = () => {
   useEffect(() => {
     const fetchReports = async () => {
       try {
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        // Mock data - in production, replace with API call
-        const mockReports: Report[] = [
-          {
-            id: 'r001',
-            name: 'John Doe',
-            location: 'Near Hillside Community Center',
-            latitude: -6.9150,
-            longitude: 107.6200,
-            description: 'Noticed cracks in the ground after heavy rainfall last night. About 2 meters long and still visible this morning.',
-            imageUrl: '/images/reports/crack.jpg',
-            status: 'Verified',
-            createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString() // 2 days ago
-          },
-          {
-            id: 'r002',
-            name: 'Jane Smith',
-            location: 'Valley Road, 200m from bridge',
-            latitude: -6.9240,
-            longitude: 107.6050,
-            description: 'Trees leaning at unusual angles on the hillside. Soil looks very saturated from recent rain.',
-            status: 'Pending',
-            createdAt: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString() // 12 hours ago
-          },
-          {
-            id: 'r003',
-            name: 'Mike Johnson',
-            location: 'Highland Residential Area',
-            latitude: -6.9050,
-            longitude: 107.6400,
-            description: 'Water seepage observed from hillside near residential buildings. Continuous flow for past 24 hours.',
-            imageUrl: '/images/reports/seepage.jpg',
-            status: 'Resolved',
-            createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString() // 5 days ago
-          },
-          {
-            id: 'r004',
-            name: 'Sarah Williams',
-            location: 'Mountain View School area',
-            latitude: -6.9400,
-            longitude: 107.6350,
-            description: 'Small landslide occurred behind school perimeter. No damage to buildings but playground affected.',
-            imageUrl: '/images/reports/small-landslide.jpg',
-            status: 'Verified',
-            createdAt: new Date(Date.now() - 36 * 60 * 60 * 1000).toISOString() // 36 hours ago
-          }
-        ];
-        
-        setReports(mockReports);
+        const response = await fetch('http://localhost:5000/api/report');
+        const data = await response.json();
+        setReports(data);
+
         setLoading(false);
       } catch (error) {
         console.error('Error fetching reports:', error);

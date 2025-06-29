@@ -10,9 +10,10 @@ import AdminReports from '../../../components/admin/AdminReports';
 import SensorAnalytics from '../../../components/admin/SensorAnalytics';
 import AdminSidebar from '../../../components/admin/AdminSidebar';
 import Loading from '../../../components/common/Loading';
+import AdminEducation from '@/components/admin/AdminEducation';
 
 export default function AdminDashboard() {
-    const [activeTab, setActiveTab] = useState<'summary' | 'add-sensor' | 'reports' | 'analytics'>('summary');
+    const [activeTab, setActiveTab] = useState<'summary' | 'add-sensor' | 'reports' | 'analytics' | 'education'>('summary');
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const { sensors, loading, error } = useSensors();
 
@@ -39,6 +40,8 @@ export default function AdminDashboard() {
                 return <AdminReports />;
             case 'analytics':
                 return <SensorAnalytics sensors={sensors} />;
+            case 'education':
+                return <AdminEducation/>;
             default:
                 return <AdminSensorSummary sensors={sensors} />;
         }
@@ -61,6 +64,10 @@ export default function AdminDashboard() {
             'analytics': {
                 title: 'Sensor Analytics',
                 description: 'Detailed analytics and insights'
+            },
+            'education': {
+                title: 'Education Materials',
+                description: 'Manage and create learning content for users'
             }
         };
         return tabInfo[activeTab];

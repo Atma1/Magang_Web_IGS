@@ -1,17 +1,17 @@
 import { SignOutButton, SignedIn } from '@clerk/nextjs';
 import { motion } from 'framer-motion';
-import { FaPlus, FaChartBar, FaFileAlt } from 'react-icons/fa';
+import { FaPlus, FaChartBar, FaFileAlt, FaBook } from 'react-icons/fa';
 
 interface MenuItem {
-    id: 'summary' | 'add-sensor' | 'reports' | 'analytics';
+    id: 'summary' | 'add-sensor' | 'reports' | 'analytics' | 'education';
     label: string;
     icon: React.ComponentType<any>;
     color: string;
 }
 
 interface AdminSidebarProps {
-    activeTab: 'summary' | 'add-sensor' | 'reports' | 'analytics';
-    setActiveTab: (tab: 'summary' | 'add-sensor' | 'reports' | 'analytics') => void;
+    activeTab: 'summary' | 'add-sensor' | 'reports' | 'analytics' | 'education';
+    setActiveTab: (tab: 'summary' | 'add-sensor' | 'reports' | 'analytics' | 'education') => void;
     sidebarOpen: boolean;
     sensorsCount: number;
 }
@@ -41,7 +41,14 @@ const AdminSidebar = ({ activeTab, setActiveTab, sidebarOpen, sensorsCount }: Ad
             label: 'Sensor Analytics',
             icon: FaChartBar,
             color: 'from-pink-500 to-red-600'
-        }
+        },
+        {
+            id: 'education',
+            label: 'Education',
+            icon: FaBook,
+            color: 'from-indigo-500 to-purple-600'
+          }
+          
     ];
 
     return (
@@ -102,6 +109,7 @@ const AdminSidebar = ({ activeTab, setActiveTab, sidebarOpen, sensorsCount }: Ad
                                             {item.id === 'add-sensor' && 'Add new sensors'}
                                             {item.id === 'reports' && 'Manage reports'}
                                             {item.id === 'analytics' && 'View analytics'}
+                                            {item.id === 'education' && 'Learning resources'}
                                         </div>
                                     </div>
                                 </div>

@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaMapMarkerAlt, FaPlus, FaSave, FaTimes } from 'react-icons/fa';
 import { Sensor } from '../../types';
+import axios from 'axios';
+
 
 const AddSensorForm = () => {
     const [formData, setFormData] = useState({
@@ -30,7 +32,12 @@ const AddSensorForm = () => {
         setIsSubmitting(true);
 
         // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        try {
+            const response = await axios.post('http://localhost:5000/api/sensors', formData);
+            console.log("Sensor saved to backend:", response.data);
+          } catch (error) {
+            console.error("Error saving sensor:", error);
+          }
 
         // Create new sensor object
         const newSensor: Partial<Sensor> = {
@@ -39,7 +46,7 @@ const AddSensorForm = () => {
             location: formData.location,
             latitude: parseFloat(formData.latitude),
             longitude: parseFloat(formData.longitude),
-            status: 'Normal',
+            // status: 'Normal',
             temperature: parseFloat(formData.temperature) || 25,
             moisture: parseFloat(formData.moisture) || 60,
             movement: parseFloat(formData.movement) || 0,

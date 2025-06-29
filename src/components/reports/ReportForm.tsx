@@ -83,16 +83,29 @@ const ReportForm: React.FC<ReportFormProps> = ({ onSuccess }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     if (!validate()) return;
-
     setIsSubmitting(true);
-
+  
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-
-      console.log('Submitting report:', formData);
-
+      const form = new FormData();
+      form.append('name', formData.name);
+      form.append('location', formData.location);
+      form.append('description', formData.description);
+      if (formData.latitude) form.append('latitude', formData.latitude);
+      if (formData.longitude) form.append('longitude', formData.longitude);
+      if (formData.imageFile) form.append('image', formData.imageFile);
+  
+      const response = await fetch('http://localhost:5000/api/report/submit', {
+        method: 'POST',
+        body: form,
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to submit report');
+      }
+  
+      // Reset form
       setFormData({
         name: '',
         location: '',
@@ -101,7 +114,7 @@ const ReportForm: React.FC<ReportFormProps> = ({ onSuccess }) => {
         latitude: '',
         longitude: '',
       });
-
+  
       onSuccess();
     } catch (error) {
       console.error('Error submitting report:', error);
@@ -109,6 +122,7 @@ const ReportForm: React.FC<ReportFormProps> = ({ onSuccess }) => {
       setIsSubmitting(false);
     }
   };
+  
 
   return (
     <Card>
