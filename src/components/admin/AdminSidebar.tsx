@@ -47,17 +47,16 @@ const AdminSidebar = ({ activeTab, setActiveTab, sidebarOpen, sensorsCount }: Ad
             label: 'Education',
             icon: FaBook,
             color: 'from-indigo-500 to-purple-600'
-          }
-          
+        }
+
     ];
 
     return (
         <motion.div
-            className={`fixed left-0 top-0 h-full z-40 transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+            className={`fixed left-0 top-0 h-full z-40 transition-transform duration-100 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
                 } lg:translate-x-0`}
             initial={{ x: -300 }}
             animate={{ x: sidebarOpen ? 0 : -300 }}
-            transition={{ type: 'spring', stiffness: 50 }}
         >
             <div className="w-80 h-full glass-intense backdrop-blur-xl border-r border-white/20 shadow-2xl">
                 {/* Header */}
@@ -78,7 +77,7 @@ const AdminSidebar = ({ activeTab, setActiveTab, sidebarOpen, sensorsCount }: Ad
                             <motion.button
                                 key={item.id}
                                 onClick={() => setActiveTab(item.id)}
-                                className={`w-full p-4 rounded-xl text-left transition-all duration-300 ${isActive
+                                className={`w-full p-4 rounded-xl text-left transition-all duration-100 ${isActive
                                     ? 'bg-gradient-to-r text-white shadow-lg scale-105'
                                     : 'hover:bg-white/50 hover:scale-102'
                                     }`}
@@ -90,9 +89,6 @@ const AdminSidebar = ({ activeTab, setActiveTab, sidebarOpen, sensorsCount }: Ad
                                         }
                                         : {}
                                 }
-                                initial={{ opacity: 0, x: -50 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: index * 0.1 }}
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
                             >
@@ -109,7 +105,7 @@ const AdminSidebar = ({ activeTab, setActiveTab, sidebarOpen, sensorsCount }: Ad
                                             {item.id === 'add-sensor' && 'Add new sensors'}
                                             {item.id === 'reports' && 'Manage reports'}
                                             {item.id === 'analytics' && 'View analytics'}
-                                            {item.id === 'education' && 'Learning resources'}
+                                            {item.id === 'education' && 'Manage Learning resources'}
                                         </div>
                                     </div>
                                 </div>
