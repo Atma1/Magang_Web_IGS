@@ -1,85 +1,63 @@
-import React, { useEffect, useState } from 'react';
-import { FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
+import React, { useState } from 'react';
+import { FaEdit, FaTrash } from 'react-icons/fa';
 import { motion } from 'framer-motion';
+import { useEducation, Education } from '@/hooks/useEducation';
 
-interface Education {
-  id: number;
-  title: string;
-  description: string;
-  topics: string[];
-}
-
-const topicOptions = ['Awareness', 'Safety', 'Emergency', 'Prevention'];
+const categoryOptions = ['Awareness', 'Safety', 'Emergency', 'Prevention'];
 
 const AdminEducation = () => {
-  const [educations, setEducations] = useState<Education[]>([]);
-  const [formData, setFormData] = useState<Omit<Education, 'id'>>({ title: '', description: '', topics: [] });
+  const {
+    educations,
+    loading,
+    error,
+    addEducation,
+    updateEducation,
+    deleteEducation
+  } = useEducation();
+  const [formData, setFormData] = useState<Omit<Education, 'id'>>({
+    title: '', content: '', tags: [], summary: '', imageUrl: '', category: ''
+  });
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchEducations();
-  }, []);
-
-  const fetchEducations = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch('http://localhost:5000/api/education');
-      const data = await res.json();
-      setEducations(data);
-    } catch (err) {
-      console.error('Failed to fetch education:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const res = await fetch(editingId ? `http://localhost:5000/api/education/${editingId}` : 'http://localhost:5000/api/education', {
-        method: editingId ? 'PATCH' : 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-      if (!res.ok) throw new Error('Failed to save education');
-      fetchEducations();
-      setFormData({ title: '', description: '', topics: [] });
+    if (editingId) {
+      await updateEducation(editingId, formData);
       setEditingId(null);
-    } catch (err) {
-      console.error(err);
+    } else {
+      await addEducation(formData);
     }
+    setFormData({ title: '', content: '', tags: [], summary: '', imageUrl: '', category: '' });
   };
 
   const handleDelete = async (id: number) => {
     if (!confirm('Are you sure you want to delete this item?')) return;
-    try {
-      const res = await fetch(`http://localhost:5000/api/education/${id}`, { method: 'DELETE' });
-      if (!res.ok) throw new Error('Failed to delete');
-      fetchEducations();
-    } catch (err) {
-      console.error(err);
-    }
+    await deleteEducation(id);
   };
 
   const handleEdit = (edu: Education) => {
     setEditingId(edu.id);
-    setFormData({ title: edu.title, description: edu.description, topics: edu.topics });
+    setFormData({
+      title: edu.title,
+      content: edu.content,
+      tags: edu.tags,
+      summary: edu.summary,
+      imageUrl: edu.imageUrl,
+      category: edu.category
+    });
   };
 
-  const handleTopicToggle = (topic: string) => {
+  const handleCategoryChange = (category: string) => {
     setFormData(prev => ({
       ...prev,
-      topics: prev.topics.includes(topic)
-        ? prev.topics.filter(t => t !== topic)
-        : [...prev.topics, topic]
+      category: category
     }));
   };
 
   return (
     <div className="space-y-8">
       <h2 className="text-2xl font-bold">Manage Education Materials</h2>
-
+      {error && <div className="text-red-500">{error}</div>}
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-4 p-4 rounded-xl bg-white shadow">
         <div>
@@ -92,32 +70,50 @@ const AdminEducation = () => {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium">Description</label>
+          <label className="block text-sm font-medium">Summary</label>
           <textarea
             className="w-full p-2 border rounded"
-            value={formData.description}
-            onChange={e => setFormData({ ...formData, description: e.target.value })}
+            value={formData.summary}
+            onChange={e => setFormData({ ...formData, summary: e.target.value })}
             required
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">Topics</label>
-          <div className="flex flex-wrap gap-2">
-            {topicOptions.map(topic => (
-              <button
-                type="button"
-                key={topic}
-                className={`px-3 py-1 rounded-full border text-sm ${formData.topics.includes(topic)
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-100 text-gray-700'}`}
-                onClick={() => handleTopicToggle(topic)}
-              >
-                {topic}
-              </button>
-            ))}
+          <label className="block text-sm font-medium">Content</label>
+          <textarea
+            className="w-full p-2 border rounded"
+            value={formData.content}
+            onChange={e => setFormData({ ...formData, content: e.target.value })}
+            required
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium">Tags</label>
+          <textarea
+            className="w-full p-2 border rounded"
+            value={formData.tags}
+            onChange={e => setFormData({ ...formData, tags: e.target.value.split(',') })}
+            required
+          />
+          <div>
+            <label className="block text-sm font-medium mt-1">Category</label>
+            <div className="flex flex-wrap gap-2 mt-1">
+              {categoryOptions.map(category => (
+                <button
+                  type="button"
+                  key={category}
+                  className={`px-3 py-1 rounded-full border text-sm ${formData.category.includes(category)
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-gray-100 text-gray-700'}`}
+                  onClick={() => handleCategoryChange(category)}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
-        <button className="bg-blue-600 text-white px-4 py-2 rounded">
+        <button className="bg-blue-600 text-white px-4 py-2 rounded-lg">
           {editingId ? 'Update' : 'Add'} Education
         </button>
       </form>
@@ -136,11 +132,11 @@ const AdminEducation = () => {
             >
               <div>
                 <h3 className="text-lg font-bold">{edu.title}</h3>
-                <p className="text-gray-600 text-sm">{edu.description}</p>
+                <p className="text-gray-600 text-sm">{edu.content}</p>
                 <div className="flex flex-wrap mt-2 gap-2">
-                  {edu.topics.map(topic => (
-                    <span key={topic} className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">
-                      {topic}
+                  {edu.tags.map(tag => (
+                    <span key={tag} className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">
+                      {tag}
                     </span>
                   ))}
                 </div>
