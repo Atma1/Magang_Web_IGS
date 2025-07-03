@@ -4,9 +4,9 @@ import { Sensor } from '@/types';
 import { IoCloseCircle } from 'react-icons/io5';
 import "mapbox-gl/dist/mapbox-gl.css";
 
-// interface MapDisplayProps {
-//   sensors: Sensor[];
-// }
+interface MapDisplayProps {
+  querySensor: string;
+}
 
 // const MapDisplay: React.FC<MapDisplayProps> = ({ sensors }) => {
 //   const [selectedSensor, setSelectedSensor] = useState<Sensor | null>(null);
@@ -15,15 +15,15 @@ import "mapbox-gl/dist/mapbox-gl.css";
 //     latitude: -6.9122,
 //     zoom: 12
 //   });
-const MapDisplay: React.FC = () => {
+const MapDisplay: React.FC<MapDisplayProps> = ({ querySensor }) => {
   const [sensors, setSensors] = useState<Sensor[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedSensor, setSelectedSensor] = useState<Sensor | null>(null);
   const [viewState, setViewState] = useState({
-        longitude: 107.6194,
-        latitude: -6.9122,
-        zoom: 12
-      });
+    longitude: 107.6194,
+    latitude: -6.9122,
+    zoom: 12
+  });
 
   useEffect(() => {
     const fetchSensors = async () => {
