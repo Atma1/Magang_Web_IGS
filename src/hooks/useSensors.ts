@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Sensor } from '../types';
+import { Sensor } from '@/types';
 
 // This is a mock implementation, in a real app you'd fetch from an API
 export const useSensors = () => {
@@ -12,7 +12,7 @@ export const useSensors = () => {
       try {
         // Simulate API delay
         await new Promise(resolve => setTimeout(resolve, 1000));
-        
+
         // Mock data - in production, replace with API call
         const mockSensors: Sensor[] = [
           {
@@ -88,7 +88,7 @@ export const useSensors = () => {
             }))
           }
         ];
-        
+
         setSensors(mockSensors);
         setLoading(false);
       } catch (err) {
