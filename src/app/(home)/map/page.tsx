@@ -12,9 +12,9 @@ import { useSearchParams } from 'next/navigation';
 export default function MapPage() {
     const [filterStatus, setFilterStatus] = useState<string | null>(null);
     const { sensors, loading } = useSensors();
-    const searchParams = useSearchParams()
+    const searchParams = useSearchParams();
 
-    const sensorQuery = searchParams.get('sensor') || 'none';
+    const sensorQuery = searchParams?.get('sensor') || 'none';
 
     const filteredSensors = filterStatus
         ? sensors.filter(sensor => sensor.status === filterStatus)
@@ -42,7 +42,7 @@ export default function MapPage() {
                         {loading ? (
                             <Loading />
                         ) : (
-                            <MapDisplay sensors={filteredSensors} querySensor={sensorQuery} />
+                            <MapDisplay querySensor={sensorQuery} />
                         )}
                     </div>
 
