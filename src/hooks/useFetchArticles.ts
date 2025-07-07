@@ -18,7 +18,7 @@ export function useFetchArticles() {
                         title: 'Understanding Landslide Risk Factors',
                         summary: 'Learn about the various factors that contribute to landslide risks in mountainous regions.',
                         content: 'Content about landslide risk factors...',
-                        imageUrl: '/images/education/risk-factors.jpg',
+                        image_url: '/images/education/risk-factors.jpg',
                         category: 'awareness',
                         tags: ['risk', 'causes', 'geology']
                     },
@@ -27,7 +27,7 @@ export function useFetchArticles() {
                         title: 'Landslide Early Warning Signs',
                         summary: 'Recognize the warning signs that could indicate an imminent landslide.',
                         content: 'Content about warning signs...',
-                        imageUrl: '/images/education/warning-signs.jpg',
+                        image_url: '/images/education/warning-signs.jpg',
                         category: 'awareness',
                         tags: ['warning signs', 'safety', 'observation']
                     },
@@ -36,7 +36,7 @@ export function useFetchArticles() {
                         title: 'Emergency Response During a Landslide Event',
                         summary: 'Critical actions to take if you find yourself in an active landslide situation.',
                         content: 'Content about emergency response...',
-                        imageUrl: '/images/education/emergency-response.jpg',
+                        image_url: '/images/education/emergency-response.jpg',
                         category: 'safety',
                         tags: ['emergency', 'response', 'safety']
                     }
