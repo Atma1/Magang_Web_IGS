@@ -1,17 +1,17 @@
 import { SignOutButton, SignedIn } from '@clerk/nextjs';
 import { motion } from 'framer-motion';
-import { FaPlus, FaChartBar, FaFileAlt, FaBook } from 'react-icons/fa';
+import { FaPlus, FaChartBar, FaFileAlt, FaBook, FaCog } from 'react-icons/fa';
 
 interface MenuItem {
-    id: 'summary' | 'add-sensor' | 'reports' | 'analytics' | 'education';
+    id: 'summary' | 'add-sensor' | 'manage-sensors' | 'reports' | 'analytics' | 'education';
     label: string;
     icon: React.ComponentType<any>;
     color: string;
 }
 
 interface AdminSidebarProps {
-    activeTab: 'summary' | 'add-sensor' | 'reports' | 'analytics' | 'education';
-    setActiveTab: (tab: 'summary' | 'add-sensor' | 'reports' | 'analytics' | 'education') => void;
+    activeTab: 'summary' | 'add-sensor' | 'manage-sensors' | 'reports' | 'analytics' | 'education';
+    setActiveTab: (tab: 'summary' | 'add-sensor' | 'manage-sensors' | 'reports' | 'analytics' | 'education') => void;
     sidebarOpen: boolean;
     sensorsCount: number;
 }
@@ -29,6 +29,12 @@ const AdminSidebar = ({ activeTab, setActiveTab, sidebarOpen, sensorsCount }: Ad
             label: 'Add Sensors',
             icon: FaPlus,
             color: 'from-green-500 to-teal-600'
+        },
+        {
+            id: 'manage-sensors',
+            label: 'Manage Sensors',
+            icon: FaCog,
+            color: 'from-orange-500 to-red-600'
         },
         {
             id: 'reports',

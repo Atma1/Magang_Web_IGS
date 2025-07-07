@@ -36,11 +36,11 @@ const SensorAnalytics = ({ sensors }: SensorAnalyticsProps) => {
         const fetchData = async () => {
             try {
                 const [summaryRes, statusRes, performanceRes] = await Promise.all([
-                    axios.get(`http://localhost:5000/api/sensor-history/summary?range=${selectedTimeRange}`),
-                    axios.get('http://localhost:5000/api/sensor-history/status-distribution'),
-                    axios.get('http://localhost:5000/api/sensor-history/performance'),
+                    axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sensor-history/summary?range=${selectedTimeRange}`),
+                    axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sensor-history/status-distribution`),
+                    axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sensor-history/performance`),
                 ]);
-    
+
                 setTimeSeriesData(
                     summaryRes.data.map((row: any) => ({
                         date: row.date,
@@ -49,7 +49,7 @@ const SensorAnalytics = ({ sensors }: SensorAnalyticsProps) => {
                         avgMovement: row.avgMovement,
                     }))
                 );
-    
+
                 setStatusData(
                     statusRes.data.map((item: any) => ({
                         name: item.status,
@@ -57,42 +57,39 @@ const SensorAnalytics = ({ sensors }: SensorAnalyticsProps) => {
                         color: item.status === 'Normal' ? '#10B981' : item.status === 'Siaga' ? '#F59E0B' : '#EF4444'
                     }))
                 );
-    
+
                 setPerformanceData(performanceRes.data.map((row: any) => ({
                     id: row.id,
                     name: row.name,
                     location: row.location,
-                    temperature: row.temperature,
-                    moisture: row.moisture,
-                    movement: row.movement,
-                    score: row.score
+                    temperature: Number(row.temperature),
+                    moisture: Number(row.moisture),
+                    movement: Number(row.movement),
+                    score: Number(row.score)
                 })));
             } catch (err) {
                 console.error('Failed to fetch sensor analytics data:', err);
             }
         };
 
-    
+
         fetchData();
 
         const fetchOverview = async () => {
             try {
-              const response = await fetch('http://localhost:5000/api/sensors/overview');
-              const json = await response.json();
-              setOverviewData(json);
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sensors/overview`);
+                const json = await response.json();
+                setOverviewData(json);
             } catch (error) {
-              console.error('Error fetching overview data:', error);
+                console.error('Error fetching overview data:', error);
             }
-          };
-          fetchOverview();
+        };
+        fetchOverview();
     }, [selectedTimeRange]);
-    // const statusLength = setStatusData.data.length;
-    
-    // const data = await fetch('http://localhost:5000/api/sensors/overview').then(res => res.json());
-    
+
 
     const handleExportData = () => {
-        window.open(`http://localhost:5000/api/sensor-history/export?range=${selectedTimeRange}&metric=${selectedMetric}`);
+        window.open(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sensor-history/export?range=${selectedTimeRange}&metric=${selectedMetric}`);
     };
 
     return (
@@ -163,9 +160,9 @@ const SensorAnalytics = ({ sensors }: SensorAnalyticsProps) => {
                         </motion.div>
                     );
                 })
-            ) : (
-                <p className="col-span-4 text-center text-gray-500">Loading overview...</p>
-            )}
+                ) : (
+                    <p className="col-span-4 text-center text-gray-500">Loading overview...</p>
+                )}
             </div>
 
             {/* Time Series Chart */}
@@ -262,7 +259,7 @@ const SensorAnalytics = ({ sensors }: SensorAnalyticsProps) => {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.8 }}
                 >
-                    <h3 className="text-xl font-semibold text-gray-800 mb-6">Sensor Performance Score</h3>
+                    <h3 className="text-xl font-semibold text-gray-800 mb-6">Sensor Threshold Score</h3>
                     <div className="h-64">
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart data={performanceData.slice(0, 5)}>
@@ -319,12 +316,12 @@ const SensorAnalytics = ({ sensors }: SensorAnalyticsProps) => {
                                 <th className="text-left py-3 px-4 font-semibold text-gray-700">Temp (°C)</th>
                                 <th className="text-left py-3 px-4 font-semibold text-gray-700">Moisture (%)</th>
                                 <th className="text-left py-3 px-4 font-semibold text-gray-700">Movement (mm)</th>
-                                <th className="text-left py-3 px-4 font-semibold text-gray-700">Performance</th>
+                                <th className="text-left py-3 px-4 font-semibold text-gray-700">Threshold</th>
                             </tr>
                         </thead>
                         <tbody>
                             {performanceData.map((sensor, index) => {
-                                // const performance = performanceData.find(p => p.name === sensor.name)?.score || 0;
+                                const performance = performanceData.find(p => p.name === sensor.name)?.score || 0;
                                 return (
                                     <motion.tr
                                         key={sensor.id}
@@ -335,12 +332,12 @@ const SensorAnalytics = ({ sensors }: SensorAnalyticsProps) => {
                                     >
                                         <td className="py-4 px-4">
                                             <div className="font-medium text-gray-800">{sensor.name}</div>
-                                            <div className="text-sm text-gray-500">{sensor.id}</div>
+                                            <div className="text-sm text-gray-500">s-00{sensor.id}</div>
                                         </td>
                                         <td className="py-4 px-4 text-gray-600">{sensor.location}</td>
                                         <td className="py-4 px-4">
-                                            <span className={`px-3 py-1 rounded-full text-xs font-medium ${sensor.status === 'Normal' ? 'bg-green-100 text-green-800' :
-                                                sensor.status === 'Siaga' ? 'bg-yellow-100 text-yellow-800' :
+                                            <span className={`px-3 py-1 rounded-full text-xs font-medium ${sensor.status == 'Normal' ? 'bg-green-100 text-green-800' :
+                                                sensor.status == 'Siaga' ? 'bg-yellow-100 text-yellow-800' :
                                                     'bg-red-100 text-red-800'
                                                 }`}>
                                                 {sensor.status}
