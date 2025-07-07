@@ -42,7 +42,7 @@ export default function MapPage() {
                         {loading ? (
                             <Loading />
                         ) : (
-                            <MapDisplay querySensor={sensorQuery} />
+                            <MapDisplay sensors={filteredSensors} querySensor={sensorQuery} />
                         )}
                     </div>
 
