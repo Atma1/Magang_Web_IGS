@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
 import { MapPin, Camera } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface ReportFormProps {
   onSuccess: () => void;
@@ -83,10 +82,10 @@ const ReportForm: React.FC<ReportFormProps> = ({ onSuccess }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     if (!validate()) return;
     setIsSubmitting(true);
-  
+
     try {
       const form = new FormData();
       form.append('name', formData.name);
@@ -95,16 +94,16 @@ const ReportForm: React.FC<ReportFormProps> = ({ onSuccess }) => {
       if (formData.latitude) form.append('latitude', formData.latitude);
       if (formData.longitude) form.append('longitude', formData.longitude);
       if (formData.imageFile) form.append('image', formData.imageFile);
-  
-      const response = await fetch('http://localhost:5000/api/report/submit', {
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/report/submit`, {
         method: 'POST',
         body: form,
       });
-  
+
       if (!response.ok) {
         throw new Error('Failed to submit report');
       }
-  
+
       // Reset form
       setFormData({
         name: '',
@@ -114,7 +113,7 @@ const ReportForm: React.FC<ReportFormProps> = ({ onSuccess }) => {
         latitude: '',
         longitude: '',
       });
-  
+
       onSuccess();
     } catch (error) {
       console.error('Error submitting report:', error);
@@ -122,7 +121,7 @@ const ReportForm: React.FC<ReportFormProps> = ({ onSuccess }) => {
       setIsSubmitting(false);
     }
   };
-  
+
 
   return (
     <Card>
