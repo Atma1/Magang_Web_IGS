@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaMapMarkerAlt, FaPlus, FaSave, FaTimes } from 'react-icons/fa';
-import { Sensor } from '../../types';
-import axios from 'axios';
+import { Sensor } from '@/types';
+import { useSensors } from '@/hooks/useSensors';
 
 
 const AddSensorForm = () => {
+    const { addSensor } = useSensors();
     const [formData, setFormData] = useState({
         name: '',
         location: '',
@@ -31,47 +32,44 @@ const AddSensorForm = () => {
         e.preventDefault();
         setIsSubmitting(true);
 
-        // Simulate API call
         try {
-            const response = await axios.post('http://localhost:5000/api/sensors', formData);
-            console.log("Sensor saved to backend:", response.data);
-          } catch (error) {
+            // Create new sensor object
+            const newSensor: Omit<Sensor, 'id'> = {
+                name: formData.name,
+                location: formData.location,
+                latitude: parseFloat(formData.latitude),
+                longitude: parseFloat(formData.longitude),
+                status: 'Normal',
+                temperature: parseFloat(formData.temperature) || 25,
+                moisture: parseFloat(formData.moisture) || 60,
+                movement: parseFloat(formData.movement) || 0,
+                lastUpdate: new Date().toISOString(),
+                history: []
+            };
+
+            await addSensor(newSensor);
+            console.log('New sensor created:', newSensor);
+
+            setShowSuccess(true);
+
+            // Reset form
+            setFormData({
+                name: '',
+                location: '',
+                latitude: '',
+                longitude: '',
+                temperature: '',
+                moisture: '',
+                movement: ''
+            });
+
+            // Hide success message after 3 seconds
+            setTimeout(() => setShowSuccess(false), 3000);
+        } catch (error) {
             console.error("Error saving sensor:", error);
-          }
-
-        // Create new sensor object
-        const newSensor: Partial<Sensor> = {
-            id: `sensor_${Date.now()}`,
-            name: formData.name,
-            location: formData.location,
-            latitude: parseFloat(formData.latitude),
-            longitude: parseFloat(formData.longitude),
-            // status: 'Normal',
-            temperature: parseFloat(formData.temperature) || 25,
-            moisture: parseFloat(formData.moisture) || 60,
-            movement: parseFloat(formData.movement) || 0,
-            lastUpdate: new Date().toISOString(),
-            history: []
-        };
-
-        console.log('New sensor created:', newSensor);
-
-        setIsSubmitting(false);
-        setShowSuccess(true);
-
-        // Reset form
-        setFormData({
-            name: '',
-            location: '',
-            latitude: '',
-            longitude: '',
-            temperature: '',
-            moisture: '',
-            movement: ''
-        });
-
-        // Hide success message after 3 seconds
-        setTimeout(() => setShowSuccess(false), 3000);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const resetForm = () => {
