@@ -1,50 +1,22 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaEye, FaCheck, FaTimes, FaClock, FaMapMarkerAlt, FaImage, FaFilter } from 'react-icons/fa';
-import { Report } from '../../types';
+import { Report } from '@/types';
+import { useReports } from '@/hooks/useReports';
 
 const AdminReports = () => {
-    const [reports, setReports] = useState<Report[]>([]);
+    const {
+        reports,
+        loading,
+        updateReportStatus,
+    } = useReports();
+
     const [selectedReport, setSelectedReport] = useState<Report | null>(null);
     const [filter, setFilter] = useState<'all' | 'pending' | 'verified' | 'resolved'>('all');
-    const [loading, setLoading] = useState(true);
 
-    // Mock data - in real app, this would come from an API
-    useEffect(() => {
-        const fetchReports = async () => {
-            try {
-              const res = await fetch('http://localhost:5000/api/report');
-              const data = await res.json();
-              setReports(data);
-            } catch (err) {
-              console.error('Failed to fetch reports:', err);
-            } finally {
-              setLoading(false);
-            }
-          };
-        
-          fetchReports();
-        }, []);
-
-        const handleStatusChange = async (reportId: string, newStatus: Report['status']) => {
-            try {
-              await fetch(`http://localhost:5000/api/report/${reportId}/status`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ status: newStatus }),
-              });
-          
-              // Update local state
-              setReports(prev =>
-                prev.map(report =>
-                  report.id === reportId ? { ...report, status: newStatus } : report
-                )
-              );
-            } catch (error) {
-              console.error('Error updating status:', error);
-            }
-          };
-          
+    const handleStatusChange = async (reportId: string, newStatus: Report['status']) => {
+        updateReportStatus(reportId, newStatus);
+    };
 
     const filteredReports = filter === 'all'
         ? reports
@@ -243,7 +215,7 @@ const AdminReports = () => {
                                     {selectedReport.status}
                                 </span>
                                 <span className="text-gray-500">
-                                    {new Date(selectedReport.createdAt).toLocaleString()}
+                                    {new Date(selectedReport.created_at).toLocaleString()}
                                 </span>
                             </div>
 
@@ -279,11 +251,11 @@ const AdminReports = () => {
 
                             {/* Action Buttons */}
                             <div className="flex space-x-3 pt-4 border-t border-gray-200">
-                                {selectedReport.status === 'Pending' && (
+                                {selectedReport.status === 'pending' && (
                                     <>
                                         <button
                                             onClick={() => {
-                                                handleStatusChange(selectedReport.id, 'Verified');
+                                                handleStatusChange(selectedReport.id, 'verified');
                                                 setSelectedReport(null);
                                             }}
                                             className="flex-1 px-4 py-3 bg-blue-500 text-white rounded-xl font-medium hover:bg-blue-600 transition-colors"
@@ -292,7 +264,7 @@ const AdminReports = () => {
                                         </button>
                                         <button
                                             onClick={() => {
-                                                handleStatusChange(selectedReport.id, 'Resolved');
+                                                handleStatusChange(selectedReport.id, 'resolved');
                                                 setSelectedReport(null);
                                             }}
                                             className="flex-1 px-4 py-3 bg-green-500 text-white rounded-xl font-medium hover:bg-green-600 transition-colors"
@@ -301,10 +273,10 @@ const AdminReports = () => {
                                         </button>
                                     </>
                                 )}
-                                {selectedReport.status === 'Verified' && (
+                                {selectedReport.status === 'verified' && (
                                     <button
                                         onClick={() => {
-                                            handleStatusChange(selectedReport.id, 'Resolved');
+                                            handleStatusChange(selectedReport.id, 'resolved');
                                             setSelectedReport(null);
                                         }}
                                         className="flex-1 px-4 py-3 bg-green-500 text-white rounded-xl font-medium hover:bg-green-600 transition-colors"
