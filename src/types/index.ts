@@ -26,9 +26,9 @@ export interface Report {
   latitude?: number;
   longitude?: number;
   description: string;
-  imageUrl?: string;
-  status: 'Pending' | 'Verified' | 'Resolved';
-  createdAt: string;
+  image_path?: string;
+  status: 'pending' | 'verified' | 'resolved';
+  created_at: string;
 }
 
 export interface EducationContent {
@@ -36,7 +36,7 @@ export interface EducationContent {
   title: string;
   summary: string;
   content: string;
-  imageUrl?: string;
+  image_url?: string;
   category: string;
   tags: string[];
 }
