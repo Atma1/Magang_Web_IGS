@@ -14,7 +14,7 @@ const AdminSensorSummary = ({ sensors }: AdminSensorSummaryProps) => {
     useEffect(() => {
         const fetchSensors = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/sensors');
+                const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/sensors`);
                 setSensorsList(response.data);
             } catch (error) {
                 console.error('Error fetching sensors:', error);
@@ -182,13 +182,13 @@ const AdminSensorSummary = ({ sensors }: AdminSensorSummaryProps) => {
                                     >
                                         <td className="py-4 px-4">
                                             <div className="font-medium text-gray-800">{sensor.name}</div>
-                                            <div className="text-sm text-gray-500">{sensor.id}</div>
+                                            <div className="text-sm text-gray-500">s-00{sensor.id}</div>
                                         </td>
                                         <td className="py-4 px-4 text-gray-600">{sensor.location}</td>
                                         <td className="py-4 px-4">
                                             <span className={`px-3 py-1 rounded-full text-xs font-medium ${sensor.status === 'Normal' ? 'bg-green-100 text-green-800' :
-                                                    sensor.status === 'Siaga' ? 'bg-yellow-100 text-yellow-800' :
-                                                        'bg-red-100 text-red-800'
+                                                sensor.status === 'Siaga' ? 'bg-yellow-100 text-yellow-800' :
+                                                    'bg-red-100 text-red-800'
                                                 }`}>
                                                 {sensor.status}
                                             </span>
