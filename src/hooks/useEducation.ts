@@ -1,17 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
-
-export interface Education {
-    id: number;
-    title: string;
-    summary: string;
-    content: string;
-    imageUrl: string;
-    category: string;
-    tags: string[];
-}
+import { EducationContent } from '@/types'
 
 export function useEducation() {
-    const [educations, setEducations] = useState<Education[]>([]);
+    const [educations, setEducations] = useState<EducationContent[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -19,7 +10,7 @@ export function useEducation() {
         setLoading(true);
         setError(null);
         try {
-            const res = await fetch('http://localhost:5000/api/education');
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/education`);
             if (!res.ok) throw new Error('Failed to fetch education');
             const data = await res.json();
             setEducations(data);
@@ -30,9 +21,9 @@ export function useEducation() {
         }
     }, []);
 
-    const addEducation = useCallback(async (edu: Omit<Education, 'id'>) => {
+    const addEducation = useCallback(async (edu: Omit<EducationContent, 'id'>) => {
         try {
-            const res = await fetch('http://localhost:5000/api/education', {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/education`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(edu)
@@ -44,9 +35,9 @@ export function useEducation() {
         }
     }, [fetchEducations]);
 
-    const updateEducation = useCallback(async (id: number, edu: Omit<Education, 'id'>) => {
+    const updateEducation = useCallback(async (id: number, edu: Omit<EducationContent, 'id'>) => {
         try {
-            const res = await fetch(`http://localhost:5000/api/education/${id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/education/${id}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(edu)
@@ -60,7 +51,7 @@ export function useEducation() {
 
     const deleteEducation = useCallback(async (id: number) => {
         try {
-            const res = await fetch(`http://localhost:5000/api/education/${id}`, { method: 'DELETE' });
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/education/${id}`, { method: 'DELETE' });
             if (!res.ok) throw new Error('Failed to delete education');
             await fetchEducations();
         } catch (err: any) {
