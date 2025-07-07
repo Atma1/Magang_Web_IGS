@@ -3,17 +3,18 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaTimes, FaBars } from 'react-icons/fa';
-import { useSensors } from '../../../hooks/useSensors';
-import AdminSensorSummary from '../../../components/admin/AdminSensorSummary';
-import AddSensorForm from '../../../components/admin/AddSensorForm';
-import AdminReports from '../../../components/admin/AdminReports';
-import SensorAnalytics from '../../../components/admin/SensorAnalytics';
-import AdminSidebar from '../../../components/admin/AdminSidebar';
-import Loading from '../../../components/common/Loading';
+import { useSensors } from '@/hooks/useSensors';
+import AdminSensorSummary from '@/components/admin/AdminSensorSummary';
+import AddSensorForm from '@/components/admin/AddSensorForm';
+import AdminReports from '@/components/admin/AdminReports';
+import SensorAnalytics from '@/components/admin/SensorAnalytics';
+import AdminSidebar from '@/components/admin/AdminSidebar';
+import Loading from '@/components/common/Loading';
 import AdminEducation from '@/components/admin/AdminEducation';
+import SensorManagement from '@/components/admin/SensorManagement';
 
 export default function AdminDashboard() {
-    const [activeTab, setActiveTab] = useState<'summary' | 'add-sensor' | 'reports' | 'analytics' | 'education'>('summary');
+    const [activeTab, setActiveTab] = useState<'summary' | 'add-sensor' | 'manage-sensors' | 'reports' | 'analytics' | 'education'>('summary');
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const { sensors, loading, error } = useSensors();
 
@@ -36,12 +37,14 @@ export default function AdminDashboard() {
                 return <AdminSensorSummary sensors={sensors} />;
             case 'add-sensor':
                 return <AddSensorForm />;
+            case 'manage-sensors':
+                return <SensorManagement />;
             case 'reports':
                 return <AdminReports />;
             case 'analytics':
                 return <SensorAnalytics sensors={sensors} />;
             case 'education':
-                return <AdminEducation/>;
+                return <AdminEducation />;
             default:
                 return <AdminSensorSummary sensors={sensors} />;
         }
@@ -56,6 +59,10 @@ export default function AdminDashboard() {
             'add-sensor': {
                 title: 'Add Sensors',
                 description: 'Add new sensors to the monitoring network'
+            },
+            'manage-sensors': {
+                title: 'Manage Sensors',
+                description: 'Edit and delete existing sensors'
             },
             'reports': {
                 title: 'Check Reports',
