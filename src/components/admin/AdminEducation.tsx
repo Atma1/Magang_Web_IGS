@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { motion } from 'framer-motion';
-import { useEducation, Education } from '@/hooks/useEducation';
+import { EducationContent } from '@/types';
+import { useEducation } from '@/hooks/useEducation';
 
 const categoryOptions = ['Awareness', 'Safety', 'Emergency', 'Prevention'];
 
@@ -14,8 +15,8 @@ const AdminEducation = () => {
     updateEducation,
     deleteEducation
   } = useEducation();
-  const [formData, setFormData] = useState<Omit<Education, 'id'>>({
-    title: '', content: '', tags: [], summary: '', imageUrl: '', category: ''
+  const [formData, setFormData] = useState<Omit<EducationContent, 'id'>>({
+    title: '', content: '', tags: [], summary: '', image_url: '', category: ''
   });
   const [editingId, setEditingId] = useState<number | null>(null);
 
@@ -27,7 +28,7 @@ const AdminEducation = () => {
     } else {
       await addEducation(formData);
     }
-    setFormData({ title: '', content: '', tags: [], summary: '', imageUrl: '', category: '' });
+    setFormData({ title: '', content: '', tags: [], summary: '', image_url: '', category: '' });
   };
 
   const handleDelete = async (id: number) => {
@@ -35,14 +36,14 @@ const AdminEducation = () => {
     await deleteEducation(id);
   };
 
-  const handleEdit = (edu: Education) => {
-    setEditingId(edu.id);
+  const handleEdit = (edu: EducationContent) => {
+    setEditingId(Number(edu.id));
     setFormData({
       title: edu.title,
       content: edu.content,
       tags: edu.tags,
       summary: edu.summary,
-      imageUrl: edu.imageUrl,
+      image_url: edu.image_url,
       category: edu.category
     });
   };
@@ -95,22 +96,22 @@ const AdminEducation = () => {
             onChange={e => setFormData({ ...formData, tags: e.target.value.split(',') })}
             required
           />
-          <div>
-            <label className="block text-sm font-medium mt-1">Category</label>
-            <div className="flex flex-wrap gap-2 mt-1">
-              {categoryOptions.map(category => (
-                <button
-                  type="button"
-                  key={category}
-                  className={`px-3 py-1 rounded-full border text-sm ${formData.category.includes(category)
-                    ? 'bg-blue-500 text-white'
-                    : 'bg-gray-100 text-gray-700'}`}
-                  onClick={() => handleCategoryChange(category)}
-                >
-                  {category}
-                </button>
-              ))}
-            </div>
+        </div>
+        <div>
+          <label className="block text-sm font-medium mt-1">Category</label>
+          <div className="flex flex-wrap gap-2 mt-1">
+            {categoryOptions.map(category => (
+              <button
+                type="button"
+                key={category}
+                className={`px-3 py-1 rounded-full border text-sm ${formData.category.includes(category)
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-gray-100 text-gray-700'}`}
+                onClick={() => handleCategoryChange(category)}
+              >
+                {category}
+              </button>
+            ))}
           </div>
         </div>
         <button className="bg-blue-600 text-white px-4 py-2 rounded-lg">
@@ -150,7 +151,7 @@ const AdminEducation = () => {
                 </button>
                 <button
                   className="p-2 bg-red-500 text-white rounded"
-                  onClick={() => handleDelete(edu.id)}
+                  onClick={() => handleDelete(Number(edu.id))}
                 >
                   <FaTrash />
                 </button>
