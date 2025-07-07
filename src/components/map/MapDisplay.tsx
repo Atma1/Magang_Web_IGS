@@ -6,6 +6,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 
 interface MapDisplayProps {
   querySensor: string;
+  sensors: Sensor[];
 }
 
 // const MapDisplay: React.FC<MapDisplayProps> = ({ sensors }) => {
@@ -15,34 +16,17 @@ interface MapDisplayProps {
 //     latitude: -6.9122,
 //     zoom: 12
 //   });
-const MapDisplay: React.FC<MapDisplayProps> = ({ querySensor }) => {
-  const [sensors, setSensors] = useState<Sensor[]>([]);
-  const [loading, setLoading] = useState(true);
+const MapDisplay: React.FC<MapDisplayProps> = ({ sensors, querySensor }) => {
   const [selectedSensor, setSelectedSensor] = useState<Sensor | null>(null);
   const [viewState, setViewState] = useState({
-    longitude: 107.6194,
-    latitude: -6.9122,
+    longitude: 112.43025700,
+    latitude: -7.73677100,
     zoom: 12
   });
 
   useEffect(() => {
-    const fetchSensors = async () => {
-      try {
-        const res = await fetch('http://localhost:5000/api/sensors'); // ganti sesuai endpoint
-        const data = await res.json();
-        setSensors(data);
-        setLoading(false);
-      } catch (err) {
-        console.error('Failed to fetch sensors:', err);
-        setLoading(false);
-      }
-    };
-    fetchSensors();
-  }, []);
-
-  useEffect(() => {
     if (querySensor !== 'none' && sensors.length > 0) {
-      const foundSensor = sensors.find((sensor) => sensor.id === querySensor);
+      const foundSensor = sensors.find((sensor) => sensor.id == querySensor);
       if (foundSensor) {
         setSelectedSensor(foundSensor);
       }
