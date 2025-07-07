@@ -3,26 +3,23 @@ import Map, { FullscreenControl, GeolocateControl, MapRef, Marker, NavigationCon
 import { Sensor } from '@/types';
 import { IoCloseCircle } from 'react-icons/io5';
 import "mapbox-gl/dist/mapbox-gl.css";
+import { useSearchParams } from 'next/navigation';
 
 interface MapDisplayProps {
-  querySensor: string;
   sensors: Sensor[];
 }
 
-// const MapDisplay: React.FC<MapDisplayProps> = ({ sensors }) => {
-//   const [selectedSensor, setSelectedSensor] = useState<Sensor | null>(null);
-//   const [viewState, setViewState] = useState({
-//     longitude: 107.6194,
-//     latitude: -6.9122,
-//     zoom: 12
-//   });
-const MapDisplay: React.FC<MapDisplayProps> = ({ sensors, querySensor }) => {
+const MapDisplay: React.FC<MapDisplayProps> = ({ sensors }) => {
   const [selectedSensor, setSelectedSensor] = useState<Sensor | null>(null);
   const [viewState, setViewState] = useState({
     longitude: 112.43025700,
     latitude: -7.73677100,
     zoom: 12
   });
+
+  const searchParams = useSearchParams();
+
+  const querySensor = searchParams?.get('sensor') || 'none';
 
   useEffect(() => {
     if (querySensor !== 'none' && sensors.length > 0) {

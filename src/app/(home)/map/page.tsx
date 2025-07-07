@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { motion } from 'framer-motion';
 import MapDisplay from '@/components/map/MapDisplay';
 import MapLegend from '@/components/map/MapLegend';
@@ -12,9 +12,6 @@ import { useSearchParams } from 'next/navigation';
 export default function MapPage() {
     const [filterStatus, setFilterStatus] = useState<string | null>(null);
     const { sensors, loading } = useSensors();
-    const searchParams = useSearchParams();
-
-    const sensorQuery = searchParams?.get('sensor') || 'none';
 
     const filteredSensors = filterStatus
         ? sensors.filter(sensor => sensor.status === filterStatus)
@@ -35,14 +32,16 @@ export default function MapPage() {
 
                 <div className="bg-white rounded-xl shadow-card">
                     <div className="p-4 border-b border-gray-100">
-                        <MapFilter onFilterChange={setFilterStatus} filter={filterStatus} />
+                        <Suspense>
+                            <MapFilter onFilterChange={setFilterStatus} filter={filterStatus} />
+                        </Suspense>
                     </div>
 
                     <div className="h-[600px] relative">
                         {loading ? (
                             <Loading />
                         ) : (
-                            <MapDisplay sensors={filteredSensors} querySensor={sensorQuery} />
+                            <MapDisplay sensors={filteredSensors} />
                         )}
                     </div>
 
