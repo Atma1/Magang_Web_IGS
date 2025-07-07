@@ -23,11 +23,28 @@ interface SensorAnalyticsProps {
     sensors: Sensor[];
 }
 
+interface StatusData {
+    value: string,
+    color: string,
+    name: string
+}
+
+interface PerformanceSensor {
+    id: number;
+    name: string;
+    location: string;
+    temperature: number;
+    moisture: number;
+    movement: number;
+    score: number;
+    status?: string;
+}
+
 const SensorAnalytics = ({ sensors }: SensorAnalyticsProps) => {
     const [selectedTimeRange, setSelectedTimeRange] = useState<'24h' | '7d' | '30d' | '90d'>('7d');
     const [selectedMetric, setSelectedMetric] = useState<'temperature' | 'moisture' | 'movement'>('temperature');
-    const [statusData, setStatusData] = useState([]);
-    const [performanceData, setPerformanceData] = useState([]);
+    const [statusData, setStatusData] = useState<StatusData[]>([]);
+    const [performanceData, setPerformanceData] = useState<PerformanceSensor[]>([]);
     const [timeSeriesData, setTimeSeriesData] = useState([]);
     const [overviewData, setOverviewData] = useState<any>(null);
 
