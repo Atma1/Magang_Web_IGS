@@ -5,22 +5,22 @@ import { useState } from 'react';
 import { FaBookOpen, FaExclamationTriangle, FaShieldAlt } from 'react-icons/fa';
 import { EducationContent } from '@/types';
 import Loading from '@/components/common/Loading';
-import { useFetchArticles } from '@/hooks/useFetchArticles';
+import { useEducation } from '@/hooks/useEducation';
 
 export default function EducationPage() {
-    const { articles, loading } = useFetchArticles();
+    const { educations, loading } = useEducation();
     const [selectedArticle, setSelectedArticle] = useState<EducationContent | null>(null);
     const [activeCategory, setActiveCategory] = useState<string>('all');
 
     const categories = [
         { id: 'all', label: 'All Topics', icon: FaBookOpen, color: 'blue' },
-        { id: 'awareness', label: 'Awareness', icon: FaExclamationTriangle, color: 'yellow' },
-        { id: 'safety', label: 'Safety', icon: FaShieldAlt, color: 'green' }
+        { id: 'Awareness', label: 'Awareness', icon: FaExclamationTriangle, color: 'yellow' },
+        { id: 'Safety', label: 'Safety', icon: FaShieldAlt, color: 'green' }
     ];
 
     const filteredArticles = activeCategory === 'all'
-        ? articles
-        : articles.filter(article => article.category === activeCategory);
+        ? educations
+        : educations.filter(article => article.category === activeCategory);
 
     if (loading) {
         return <Loading fullScreen />;
@@ -88,8 +88,13 @@ export default function EducationPage() {
                             whileHover={{ y: -5 }}
                             onClick={() => setSelectedArticle(article)}
                         >
-                            <div className="h-48 bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
-                                <FaBookOpen className="text-white text-4xl" />
+                            <div className="h-48 bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center relative">
+                                <img
+                                    src={article.image_url}
+                                    className="absolute w-full h-full blur-sm opacity-60"
+                                    alt="Article Image"
+                                />
+                                <FaBookOpen className="text-white text-4xl z-10" />
                             </div>
                             <div className="p-6">
                                 <h3 className="text-xl font-semibold text-gray-800 mb-2">
@@ -128,21 +133,26 @@ export default function EducationPage() {
                             onClick={(e) => e.stopPropagation()}
                         >
                             <div className="p-8">
-                                <div className="flex justify-between items-start mb-6">
-                                    <h2 className="text-3xl font-bold text-gray-800">
+                                <div className="flex items-start mb-6 relative">
+                                    <h2 className="text-3xl font-bold text-gray-800 mx-auto text-center w-full">
                                         {selectedArticle.title}
                                     </h2>
                                     <button
                                         onClick={() => setSelectedArticle(null)}
-                                        className="text-gray-500 hover:text-gray-700 text-2xl"
+                                        className="absolute right-0 top-0 text-gray-500 hover:text-gray-700 text-2xl"
+                                        aria-label="Close"
                                     >
                                         ×
                                     </button>
                                 </div>
-                                <div
-                                    className="prose max-w-none"
-                                    dangerouslySetInnerHTML={{ __html: selectedArticle.content }}
+                                <img
+                                    src={selectedArticle.image_url}
+                                    alt="Education Image"
+                                    className="w-full h-64 object-cover rounded-md"
                                 />
+                                <div className="prose max-w-none mt-5">
+                                    {selectedArticle.content}
+                                </div>
                                 <div className="flex flex-wrap gap-2 mt-6 pt-6 border-t border-gray-200">
                                     {selectedArticle.tags.map((tag) => (
                                         <span
