@@ -29,12 +29,13 @@ interface SensorChartProps {
 const SensorChart: React.FC<SensorChartProps> = ({ sensors }) => {
   const [selectedSensor, setSelectedSensor] = useState<Sensor>(sensors[0]);
   const [dataType, setDataType] = useState<'temperature' | 'moisture' | 'movement'>('temperature');
-  
+
   const handleSensorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const sensor = sensors.find(s => s.id === e.target.value);
+
+    const sensor = sensors.find(s => s.id == e.target.value);
     if (sensor) setSelectedSensor(sensor);
   };
-  
+
   const formatTime = (timestamp: string) => {
     return new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
@@ -97,41 +98,38 @@ const SensorChart: React.FC<SensorChartProps> = ({ sensors }) => {
             ))}
           </select>
         </div>
-        
+
         <div className="flex space-x-2">
           <button
             onClick={() => setDataType('temperature')}
-            className={`px-3 py-1 rounded-md text-sm font-medium ${
-              dataType === 'temperature' 
-                ? 'bg-red-100 text-red-600' 
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
+            className={`px-3 py-1 rounded-md text-sm font-medium ${dataType === 'temperature'
+              ? 'bg-red-100 text-red-600'
+              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
           >
             Temperature
           </button>
           <button
             onClick={() => setDataType('moisture')}
-            className={`px-3 py-1 rounded-md text-sm font-medium ${
-              dataType === 'moisture' 
-                ? 'bg-blue-100 text-blue-600' 
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
+            className={`px-3 py-1 rounded-md text-sm font-medium ${dataType === 'moisture'
+              ? 'bg-blue-100 text-blue-600'
+              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
           >
             Moisture
           </button>
           <button
             onClick={() => setDataType('movement')}
-            className={`px-3 py-1 rounded-md text-sm font-medium ${
-              dataType === 'movement' 
-                ? 'bg-purple-100 text-purple-600' 
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
+            className={`px-3 py-1 rounded-md text-sm font-medium ${dataType === 'movement'
+              ? 'bg-purple-100 text-purple-600'
+              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
           >
             Movement
           </button>
         </div>
       </div>
-      
+
       <div className="h-80">
         <Line data={chartData} options={chartOptions} />
       </div>
